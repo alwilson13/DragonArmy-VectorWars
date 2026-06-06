@@ -1,6 +1,6 @@
 using UnityEngine;
 
-/// Handles player aiming for Apex Vector.
+/// Handles player aiming for Vector wars.
 /// 
 /// This script rotates the player so the triangle points toward the mouse cursor.
 public class PlayerAiming : MonoBehaviour

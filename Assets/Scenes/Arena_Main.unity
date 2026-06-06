@@ -164,6 +164,7 @@ GameObject:
   - component: {fileID: 596836331}
   - component: {fileID: 596836335}
   - component: {fileID: 596836336}
+  - component: {fileID: 596836337}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -336,6 +337,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAiming
   mainCamera: {fileID: 0}
   rotationOffset: 0
+--- !u!114 &596836337
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 596836330}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e44f659041c24645904777f20940bbe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerShooting
+  bulletPrefab: {fileID: 4495728311749921718, guid: c28b056afce48d347a217a5c5cbd7173, type: 3}
+  firePoint: {fileID: 683594099}
+  fireRate: 5
 --- !u!1 &683594098
 GameObject:
   m_ObjectHideFlags: 0
@@ -361,7 +377,7 @@ Transform:
   m_GameObject: {fileID: 683594098}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.5, y: 0, z: 0}
+  m_LocalPosition: {x: 0.35, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
