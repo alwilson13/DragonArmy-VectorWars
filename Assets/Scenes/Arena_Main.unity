@@ -163,6 +163,7 @@ GameObject:
   - component: {fileID: 596836332}
   - component: {fileID: 596836331}
   - component: {fileID: 596836335}
+  - component: {fileID: 596836336}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -282,7 +283,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
+  m_Sprite: {fileID: 7482667652216324306, guid: 75f5f34dc1b5347e0b8351032682f224, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -320,6 +321,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97db729b72ac532489508d7d2d2360c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
+  moveSpeed: 6
+--- !u!114 &596836336
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 596836330}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea5eacb39ee142a43a30045a6a353fa3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerAiming
+  mainCamera: {fileID: 0}
+  rotationOffset: 0
 --- !u!1 &683594098
 GameObject:
   m_ObjectHideFlags: 0
