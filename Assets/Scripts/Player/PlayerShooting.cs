@@ -62,9 +62,8 @@ public class PlayerShooting : MonoBehaviour
             firePoint.rotation
         );
 
-        // The player triangle points to the local right direction.
-        // firePoint.right gives the direction the bullet should travel.
-        Vector2 shootDirection = firePoint.right;
+      
+        Vector2 shootDirection = firePoint.up;
 
         // Give the bullet its movement direction.
         Bullet bulletScript = newBullet.GetComponent<Bullet>();
