@@ -41,4 +41,14 @@ public class PlayerMovement : MonoBehaviour
         // Move the player using Rigidbody2D physics.
         rb.linearVelocity = moveInput * moveSpeed;
     }
+
+    private void OnDisable()
+    {
+        // Stop movement when movement script gets disabled.
+        // This is useful when the player dies or the game is paused.
+        if (rb != null)
+        {
+            rb.linearVelocity = Vector2.zero;
+        }
+    }
 }
