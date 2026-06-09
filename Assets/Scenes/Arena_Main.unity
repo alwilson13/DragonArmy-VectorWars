@@ -673,6 +673,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2055623507}
   - component: {fileID: 2055623508}
+  - component: {fileID: 2055623509}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -707,16 +708,40 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6a53e82ef3ed4f42bbc9f0a272ec3e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemySpawner
-  enemyPrefab: {fileID: 8846257112448239548, guid: cc1a5695a57515a43932f4b6ad1fcd56, type: 3}
+  defaultEnemyPrefab: {fileID: 8846257112448239548, guid: cc1a5695a57515a43932f4b6ad1fcd56, type: 3}
   spawnPoints:
   - {fileID: 1913298880}
   - {fileID: 880091319}
   - {fileID: 1775526096}
   - {fileID: 347309819}
-  spawnOnStart: 1
-  firstSpawnDelay: 1
-  spawnInterval: 2
-  maxEnemiesToSpawn: 10
+--- !u!114 &2055623509
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2055623506}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc631f7eb81fe15458cd7dc80e6a7841, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WaveManager
+  waves:
+  - waveName: warmup
+    enemyPrefab: {fileID: 8846257112448239548, guid: cc1a5695a57515a43932f4b6ad1fcd56, type: 3}
+    enemyCount: 3
+    spawnDelay: 0.5
+  - waveName: More chasers
+    enemyPrefab: {fileID: 8846257112448239548, guid: cc1a5695a57515a43932f4b6ad1fcd56, type: 3}
+    enemyCount: 5
+    spawnDelay: 0.5
+  - waveName: Pressure Wave
+    enemyPrefab: {fileID: 8846257112448239548, guid: cc1a5695a57515a43932f4b6ad1fcd56, type: 3}
+    enemyCount: 8
+    spawnDelay: 0.5
+  firstWaveDelay: 1
+  delayBetweenWaves: 2
+  enemySpawner: {fileID: 2055623508}
 --- !u!1 &2132626613
 GameObject:
   m_ObjectHideFlags: 0
