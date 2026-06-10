@@ -94,6 +94,14 @@ public class PlayerHealth : MonoBehaviour
 
         Debug.Log("Game Over! Player died.");
 
+        // Show the Game Over UI screen.
+        UIManager uiManager = FindFirstObjectByType<UIManager>();
+
+        if (uiManager != null)
+        {
+            uiManager.ShowGameOver();
+        }
+
         // Stop player movement.
         PlayerMovement movement = GetComponent<PlayerMovement>();
         if (movement != null)

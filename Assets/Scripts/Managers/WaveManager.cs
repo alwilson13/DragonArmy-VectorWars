@@ -151,6 +151,14 @@ public class WaveManager : MonoBehaviour
     private void Victory()
     {
         Debug.Log("Victory! All waves cleared.");
+
+        // Show the Victory UI screen.
+        UIManager uiManager = FindFirstObjectByType<UIManager>();
+
+        if (uiManager != null)
+        {
+            uiManager.ShowVictory();
+        }
     }
 
     /// Returns the current wave number for UI later.
