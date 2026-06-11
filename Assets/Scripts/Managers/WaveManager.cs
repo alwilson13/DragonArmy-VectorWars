@@ -2,29 +2,35 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-/// Controls the wave progression for Vector wars.
+/// Controls wave progression for Vector wars.
 /// 
-/// The WaveManager starts waves, tells the EnemySpawner to spawn enemies,
-/// tracks active enemies, and starts the next wave after all enemies are defeated.
-/// 
-/// Current wave trigger:
-/// Kill All - the next wave starts when all enemies in the current wave are dead.
+/// This version supports mixed waves.
+/// Each wave can contain multiple enemy groups.
+/// Example:
+/// Wave 3 can spawn 5 Basic Chasers and 2 Chargers.
 public class WaveManager : MonoBehaviour
 {
     [System.Serializable]
-    public class WaveData
+    public class EnemyGroup
     {
-        [Tooltip("Name of the wave for debugging and later UI.")]
-        public string waveName;
-
-        [Tooltip("Enemy prefab used for this wave.")]
+        [Tooltip("Enemy prefab used for this group.")]
         public GameObject enemyPrefab;
 
-        [Tooltip("How many enemies should spawn in this wave.")]
+        [Tooltip("How many enemies of this type should spawn.")]
         public int enemyCount = 5;
 
-        [Tooltip("How much time passes between each enemy spawn.")]
+        [Tooltip("How much time passes between each enemy spawn in this group.")]
         public float spawnDelay = 0.5f;
+    }
+
+    [System.Serializable]
+    public class WaveData
+    {
+        [Tooltip("Name of the wave for debugging and UI.")]
+        public string waveName;
+
+        [Tooltip("Enemy groups included in this wave.")]
+        public EnemyGroup[] enemyGroups;
     }
 
     [Header("Wave Settings")]
@@ -54,7 +60,7 @@ public class WaveManager : MonoBehaviour
 
     private void Awake()
     {
-        // If EnemySpawner was not assigned in the Inspector, try to find it on this object.
+        // If EnemySpawner was not assigned, try to find it on this object.
         if (enemySpawner == null)
         {
             enemySpawner = GetComponent<EnemySpawner>();
@@ -75,7 +81,7 @@ public class WaveManager : MonoBehaviour
         StartCoroutine(StartWaveRoutine());
     }
 
-    /// Starts the current wave and spawns all enemies for that wave.
+    /// Starts the current wave and spawns all enemy groups inside it.
     private IEnumerator StartWaveRoutine()
     {
         // If there are no more waves, the player wins.
@@ -91,41 +97,44 @@ public class WaveManager : MonoBehaviour
 
         Debug.Log("Starting " + currentWave.waveName);
 
-        // Clear old missing references before starting the new wave.
         activeEnemies.Clear();
 
-        // Spawn enemies one at a time.
-        for (int i = 0; i < currentWave.enemyCount; i++)
+        // Loop through each enemy group in the wave.
+        for (int groupIndex = 0; groupIndex < currentWave.enemyGroups.Length; groupIndex++)
         {
-            GameObject spawnedEnemy = enemySpawner.SpawnEnemy(currentWave.enemyPrefab);
+            EnemyGroup group = currentWave.enemyGroups[groupIndex];
 
-            // Add the spawned enemy to the active enemy list.
-            if (spawnedEnemy != null)
+            // Spawn all enemies in this group.
+            for (int enemyIndex = 0; enemyIndex < group.enemyCount; enemyIndex++)
             {
-                activeEnemies.Add(spawnedEnemy);
-            }
+                GameObject spawnedEnemy = enemySpawner.SpawnEnemy(group.enemyPrefab);
 
-            yield return new WaitForSeconds(currentWave.spawnDelay);
+                if (spawnedEnemy != null)
+                {
+                    activeEnemies.Add(spawnedEnemy);
+                }
+
+                yield return new WaitForSeconds(group.spawnDelay);
+            }
         }
     }
 
     private void Update()
     {
-        // Only check wave completion if a wave is currently active.
+        // Only check wave completion while a wave is active.
         if (waveInProgress)
         {
             CheckWaveCompletion();
         }
     }
 
-    /// Checks if all enemies in the current wave are dead.
-    /// If they are, start the next wave.
+    /// Checks whether all enemies in the current wave are dead.
     private void CheckWaveCompletion()
     {
-        // Remove enemies from the list if they have been destroyed.
+        // Remove destroyed enemies from the active list.
         activeEnemies.RemoveAll(enemy => enemy == null);
 
-        // If no active enemies remain, the wave is complete.
+        // If no enemies remain, the wave is complete.
         if (activeEnemies.Count == 0)
         {
             waveInProgress = false;
@@ -138,7 +147,7 @@ public class WaveManager : MonoBehaviour
         }
     }
 
-    /// Waits a short time before starting the next wave.
+    /// Waits before starting the next wave.
     private IEnumerator StartNextWaveAfterDelay()
     {
         yield return new WaitForSeconds(delayBetweenWaves);
@@ -146,13 +155,11 @@ public class WaveManager : MonoBehaviour
         StartCoroutine(StartWaveRoutine());
     }
 
-    /// Handles the victory condition after the final wave is cleared.
-    /// Later, this will open the Victory UI screen.
+    /// Handles victory after the final wave is cleared.
     private void Victory()
     {
         Debug.Log("Victory! All waves cleared.");
 
-        // Show the Victory UI screen.
         UIManager uiManager = FindFirstObjectByType<UIManager>();
 
         if (uiManager != null)
@@ -161,10 +168,11 @@ public class WaveManager : MonoBehaviour
         }
     }
 
-    /// Returns the current wave number for UI later.
+    /// Returns the current wave number for UI.
+    /// Clamps the value so it does not go above the total wave count.
     public int GetCurrentWaveNumber()
     {
-        return currentWaveIndex + 1;
+        return Mathf.Clamp(currentWaveIndex + 1, 1, waves.Length);
     }
 
     /// Returns the total number of waves.

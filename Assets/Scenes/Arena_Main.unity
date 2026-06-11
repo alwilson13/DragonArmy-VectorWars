@@ -2181,17 +2181,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::WaveManager
   waves:
   - waveName: warmup
-    enemyPrefab: {fileID: 8846257112448239548, guid: cc1a5695a57515a43932f4b6ad1fcd56, type: 3}
-    enemyCount: 3
-    spawnDelay: 0.5
-  - waveName: More chasers
-    enemyPrefab: {fileID: 8846257112448239548, guid: cc1a5695a57515a43932f4b6ad1fcd56, type: 3}
-    enemyCount: 5
-    spawnDelay: 0.5
-  - waveName: Pressure Wave
-    enemyPrefab: {fileID: 8846257112448239548, guid: cc1a5695a57515a43932f4b6ad1fcd56, type: 3}
-    enemyCount: 8
-    spawnDelay: 0.5
+    enemyGroups:
+    - enemyPrefab: {fileID: 8846257112448239548, guid: cc1a5695a57515a43932f4b6ad1fcd56, type: 3}
+      enemyCount: 3
+      spawnDelay: 0.5
+  - waveName: First Charger
+    enemyGroups:
+    - enemyPrefab: {fileID: 8846257112448239548, guid: 9cb189d13706ce040884d9d06243c1b8, type: 3}
+      enemyCount: 2
+      spawnDelay: 0.8
+  - waveName: ' Mixed Pressure'
+    enemyGroups:
+    - enemyPrefab: {fileID: 8846257112448239548, guid: cc1a5695a57515a43932f4b6ad1fcd56, type: 3}
+      enemyCount: 5
+      spawnDelay: 0.4
+    - enemyPrefab: {fileID: 8846257112448239548, guid: 9cb189d13706ce040884d9d06243c1b8, type: 3}
+      enemyCount: 2
+      spawnDelay: 0.8
   firstWaveDelay: 1
   delayBetweenWaves: 2
   enemySpawner: {fileID: 2055623508}
