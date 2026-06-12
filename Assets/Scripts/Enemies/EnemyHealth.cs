@@ -1,15 +1,20 @@
 using UnityEngine;
 
-/// Handles enemy health, damage, death, and explosion effects.
+/// Handles enemy health, damage, death, score reward, and explosion effects.
 /// 
-/// Any enemy with this script can take damage from bullets.
-/// When health reaches zero, the enemy explodes and is destroyed.
+/// Enemies give score when destroyed by player attacks.
+/// Enemies do not give score when they explode after hitting the player.
 public class EnemyHealth : MonoBehaviour
 {
     [Header("Health Settings")]
 
     [Tooltip("The enemy's maximum health.")]
     [SerializeField] private int maxHealth = 3;
+
+    [Header("Score Settings")]
+
+    [Tooltip("How many points the player earns for destroying this enemy.")]
+    [SerializeField] private int scoreValue = 100;
 
     [Header("Death Effects")]
 
@@ -29,6 +34,7 @@ public class EnemyHealth : MonoBehaviour
     }
 
     /// Damages the enemy by a specific amount.
+    /// This usually happens when the enemy is hit by a bullet.
     public void TakeDamage(int damageAmount)
     {
         // Do not take damage if already dead.
@@ -42,15 +48,15 @@ public class EnemyHealth : MonoBehaviour
 
         Debug.Log(gameObject.name + " took " + damageAmount + " damage. Health left: " + currentHealth);
 
-        // If health is zero or below, kill the enemy.
+        // If health is zero or below, kill the enemy and award score.
         if (currentHealth <= 0)
         {
-            Die();
+            Die(true);
         }
     }
 
-    /// Instantly kills the enemy.
-    /// This is useful when the enemy hits the player and should explode.
+    /// Instantly kills the enemy without giving score.
+    /// This is used when the enemy hits the player and explodes.
     public void ExplodeAndDie()
     {
         if (isDead)
@@ -58,16 +64,28 @@ public class EnemyHealth : MonoBehaviour
             return;
         }
 
-        Die();
+        // False means no score is awarded.
+        Die(false);
     }
 
     /// Handles enemy death.
-    /// Spawns an explosion effect, then destroys the enemy.
-    private void Die()
+    /// Can optionally award score depending on how the enemy died.
+    private void Die(bool awardScore)
     {
         isDead = true;
 
         Debug.Log(gameObject.name + " exploded.");
+
+        // Award score only if the player destroyed the enemy.
+        if (awardScore)
+        {
+            ScoreManager scoreManager = FindFirstObjectByType<ScoreManager>();
+
+            if (scoreManager != null)
+            {
+                scoreManager.AddScore(scoreValue);
+            }
+        }
 
         // Spawn the explosion effect at the enemy's position.
         if (explosionPrefab != null)

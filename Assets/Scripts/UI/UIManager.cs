@@ -35,7 +35,9 @@ public class UIManager : MonoBehaviour
     [Tooltip("Reference to the WaveManager script.")]
     [SerializeField] private WaveManager waveManager;
 
-    private int score = 0;
+    [Tooltip("Reference to the ScoreManager script.")]
+    [SerializeField] private ScoreManager scoreManager;
+
 
     // Prevents Game Over and Victory from showing at the same time.
     private bool gameEnded;
@@ -57,6 +59,12 @@ public class UIManager : MonoBehaviour
         if (waveManager == null)
         {
             waveManager = GetComponent<WaveManager>();
+        }
+
+        // If ScoreManager is not assigned, try to find it on the same GameObject.
+        if (scoreManager == null)
+        {
+            scoreManager = GetComponent<ScoreManager>();
         }
     }
 
@@ -117,12 +125,12 @@ public class UIManager : MonoBehaviour
     /// Updates the score text.
     private void UpdateScoreText()
     {
-        if (scoreText == null)
+        if (scoreText == null || scoreManager == null)
         {
             return;
         }
 
-        scoreText.text = "Score: " + score;
+        scoreText.text = "Score: " + scoreManager.GetCurrentScore();
     }
 
     /// Shows the Game Over panel.
@@ -177,11 +185,5 @@ public class UIManager : MonoBehaviour
     public void RestartGame()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-    }
-
-    /// Placeholder score setter.
-    public void SetScore(int newScore)
-    {
-        score = newScore;
     }
 }
