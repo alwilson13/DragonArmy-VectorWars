@@ -42,6 +42,14 @@ public class PlayerMovement : MonoBehaviour
         rb.linearVelocity = moveInput * moveSpeed;
     }
 
+    public void IncreaseMoveSpeed(float amount)
+    {
+        moveSpeed += amount;
+
+        Debug.Log("New Move Speed: " + moveSpeed);
+        //Add by Avery for LevelupManager to increase player move speed when they select the move speed upgrade.
+    }
+
     private void OnDisable()
     {
         // Stop movement when movement script gets disabled.
