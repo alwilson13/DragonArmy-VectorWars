@@ -37,6 +37,9 @@ public class UIManager : MonoBehaviour
 
     private int score = 0;
 
+    // Prevents Game Over and Victory from showing at the same time.
+    private bool gameEnded;
+
     private void Awake()
     {
         // If PlayerHealth is not assigned, try to find the player by tag.
@@ -126,19 +129,46 @@ public class UIManager : MonoBehaviour
     /// Called when the player dies.
     public void ShowGameOver()
     {
+        // If Victory or Game Over already happened, do nothing.
+        if (gameEnded)
+        {
+            return;
+        }
+
+        gameEnded = true;
+
         if (gameOverPanel != null)
         {
             gameOverPanel.SetActive(true);
         }
+
+        if (victoryPanel != null)
+        {
+            victoryPanel.SetActive(false);
+        }
     }
+
 
     /// Shows the Victory panel.
     /// Called when all waves are cleared.
     public void ShowVictory()
     {
+        // If Victory or Game Over already happened, do nothing.
+        if (gameEnded)
+        {
+            return;
+        }
+
+        gameEnded = true;
+
         if (victoryPanel != null)
         {
             victoryPanel.SetActive(true);
+        }
+
+        if (gameOverPanel != null)
+        {
+            gameOverPanel.SetActive(false);
         }
     }
 

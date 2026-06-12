@@ -158,6 +158,14 @@ public class WaveManager : MonoBehaviour
     /// Handles victory after the final wave is cleared.
     private void Victory()
     {
+        PlayerHealth playerHealth = FindFirstObjectByType<PlayerHealth>();
+
+        // If the player is dead, do not trigger victory.
+        if (playerHealth != null && playerHealth.IsDead())
+        {
+            return;
+        }
+
         Debug.Log("Victory! All waves cleared.");
 
         UIManager uiManager = FindFirstObjectByType<UIManager>();

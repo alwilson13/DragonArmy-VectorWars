@@ -90,6 +90,12 @@ public class PlayerHealth : MonoBehaviour
     /// For now, this disables movement and shooting and prints a Game Over message.
     private void Die()
     {
+        // Prevent this function from running more than once.
+        if (isDead)
+        {
+            return;
+        }
+
         isDead = true;
 
         Debug.Log("Game Over! Player died.");
@@ -102,8 +108,18 @@ public class PlayerHealth : MonoBehaviour
             uiManager.ShowGameOver();
         }
 
+        // Stop the wave system after the player dies.
+        // This prevents the game from triggering Victory after Game Over.
+        WaveManager waveManager = FindFirstObjectByType<WaveManager>();
+
+        if (waveManager != null)
+        {
+            waveManager.enabled = false;
+        }
+
         // Stop player movement.
         PlayerMovement movement = GetComponent<PlayerMovement>();
+
         if (movement != null)
         {
             movement.enabled = false;
@@ -111,6 +127,7 @@ public class PlayerHealth : MonoBehaviour
 
         // Stop player aiming.
         PlayerAiming aiming = GetComponent<PlayerAiming>();
+
         if (aiming != null)
         {
             aiming.enabled = false;
@@ -118,6 +135,7 @@ public class PlayerHealth : MonoBehaviour
 
         // Stop player shooting.
         PlayerShooting shooting = GetComponent<PlayerShooting>();
+
         if (shooting != null)
         {
             shooting.enabled = false;
@@ -125,6 +143,7 @@ public class PlayerHealth : MonoBehaviour
 
         // Stop Rigidbody2D movement.
         Rigidbody2D rb = GetComponent<Rigidbody2D>();
+
         if (rb != null)
         {
             rb.linearVelocity = Vector2.zero;
