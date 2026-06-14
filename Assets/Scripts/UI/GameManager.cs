@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour
     public GameObject player;
 
 
-    //public PlayerController playerScript; // This line gets uncommented out after the player script is created
+    public PlayerMovement playerScript;
 
     float originalTimeScale;
 
@@ -24,7 +24,7 @@ public class GameManager : MonoBehaviour
         instance = this;
 
         player = GameObject.FindWithTag("Player");
-        //playerScript = player.GetComponent<PlayerController>().gameObject; // This line gets uncommented out after the player script is created
+        playerScript = player.GetComponent<PlayerMovement>();
 
         originalTimeScale = Time.timeScale;
     }
@@ -40,10 +40,10 @@ public class GameManager : MonoBehaviour
                 activeMenu = pauseMenu;
                 activeMenu.SetActive(true);
             }
-        }
-        else if (activeMenu == pauseMenu)
-        {
-            Unpause();
+            else if (activeMenu == pauseMenu)
+            {
+                Unpause();
+            }
         }
     }
 
