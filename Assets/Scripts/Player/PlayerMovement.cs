@@ -67,4 +67,11 @@ public class PlayerMovement : MonoBehaviour
     {
         return moveInput;
     }
+
+    /// Returns the player's current movement speed.
+    /// Used by the UI to display player stats.
+    public float GetMoveSpeed()
+    {
+        return moveSpeed;
+    }
 }

@@ -95,4 +95,18 @@ public class PlayerShooting : MonoBehaviour
 
         Debug.Log("Bullet damage bonus increased to: " + bulletDamageBonus);
     }
+
+    /// Returns the player's current fire rate.
+    /// Used by the UI to display player stats.
+    public float GetFireRate()
+    {
+        return fireRate;
+    }
+
+    /// Returns the player's total bullet damage.
+    /// Base bullet damage is 1, plus any bonus from upgrades.
+    public int GetCurrentBulletDamage()
+    {
+        return 1 + bulletDamageBonus;
+    }
 }

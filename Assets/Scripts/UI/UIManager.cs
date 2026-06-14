@@ -29,6 +29,9 @@ public class UIManager : MonoBehaviour
     [Tooltip("Text that displays the player's current level.")]
     [SerializeField] private TMP_Text levelText;
 
+    [Tooltip("Text that displays player combat stats.")]
+    [SerializeField] private TMP_Text statsText;
+
     [Header("Panels")]
 
     [Tooltip("Panel shown when the player dies.")]
@@ -57,6 +60,12 @@ public class UIManager : MonoBehaviour
     [Tooltip("Reference to the PlayerExperience script.")]
     [SerializeField] private PlayerExperience playerExperience;
 
+    [Tooltip("Reference to the PlayerMovement script.")]
+    [SerializeField] private PlayerMovement playerMovement;
+
+    [Tooltip("Reference to the PlayerShooting script.")]
+    [SerializeField] private PlayerShooting playerShooting;
+
 
     // Prevents Game Over and Victory from showing at the same time.
     private bool gameEnded;
@@ -83,6 +92,16 @@ public class UIManager : MonoBehaviour
             if (playerExperience == null)
             {
                 playerExperience = playerObject.GetComponent<PlayerExperience>();
+            }
+
+            if (playerMovement == null)
+            {
+                playerMovement = playerObject.GetComponent<PlayerMovement>();
+            }
+
+            if (playerShooting == null)
+            {
+                playerShooting = playerObject.GetComponent<PlayerShooting>();
             }
         }
 
@@ -148,7 +167,7 @@ public class UIManager : MonoBehaviour
         UpdateHUD();
     }
 
-    /// Updates health, wave, and score text on the screen.
+    /// Updates all gameplay HUD text.
     private void UpdateHUD()
     {
         UpdateHealthText();
@@ -156,6 +175,7 @@ public class UIManager : MonoBehaviour
         UpdateScoreText();
         UpdateXPText();
         UpdateLevelText();
+        UpdateStatsText();
     }
 
     /// Updates the health text using PlayerHealth values.
@@ -214,6 +234,21 @@ public class UIManager : MonoBehaviour
         }
 
         levelText.text = "Level: " + playerExperience.GetCurrentLevel();
+    }
+
+    /// Updates the player stats text.
+    /// Shows values affected by level-up upgrades.
+    private void UpdateStatsText()
+    {
+        if (statsText == null || playerMovement == null || playerShooting == null)
+        {
+            return;
+        }
+
+        statsText.text =
+            "Fire Rate: " + playerShooting.GetFireRate().ToString("0.0") + "\n" +
+            "Damage: " + playerShooting.GetCurrentBulletDamage() + "\n" +
+            "Speed: " + playerMovement.GetMoveSpeed().ToString("0.0");
     }
 
     /// Shows the Game Over panel.
