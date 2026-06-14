@@ -179,4 +179,11 @@ public class PlayerHealth : MonoBehaviour
 
         Debug.Log("Max health increased to: " + maxHealth);
     }
+
+    /// Temporarily sets player invincibility from another script.
+    /// Used by the dodge ability so the player can avoid damage while dashing.
+    public void SetInvincible(bool value)
+    {
+        isInvincible = value;
+    }
 }

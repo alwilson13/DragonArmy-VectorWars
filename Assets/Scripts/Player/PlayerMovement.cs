@@ -60,4 +60,11 @@ public class PlayerMovement : MonoBehaviour
 
         Debug.Log("Move speed increased to: " + moveSpeed);
     }
+
+    /// Returns the current movement input direction.
+    /// Used by the dodge ability to know where the player wants to dash.
+    public Vector2 GetMoveInput()
+    {
+        return moveInput;
+    }
 }
