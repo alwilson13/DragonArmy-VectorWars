@@ -5454,19 +5454,35 @@ MonoBehaviour:
     - enemyPrefab: {fileID: 8846257112448239548, guid: cc1a5695a57515a43932f4b6ad1fcd56, type: 3}
       enemyCount: 3
       spawnDelay: 0.5
-  - waveName: First Charger
-    enemyGroups:
-    - enemyPrefab: {fileID: 8846257112448239548, guid: 9cb189d13706ce040884d9d06243c1b8, type: 3}
-      enemyCount: 2
-      spawnDelay: 0.8
-  - waveName: ' Mixed Pressure'
+  - waveName: More Pressure
     enemyGroups:
     - enemyPrefab: {fileID: 8846257112448239548, guid: cc1a5695a57515a43932f4b6ad1fcd56, type: 3}
       enemyCount: 5
-      spawnDelay: 0.4
+      spawnDelay: 0.5
+  - waveName: First Charger
+    enemyGroups:
+    - enemyPrefab: {fileID: 8846257112448239548, guid: cc1a5695a57515a43932f4b6ad1fcd56, type: 3}
+      enemyCount: 3
+      spawnDelay: 0.5
     - enemyPrefab: {fileID: 8846257112448239548, guid: 9cb189d13706ce040884d9d06243c1b8, type: 3}
       enemyCount: 2
-      spawnDelay: 0.8
+      spawnDelay: 0.5
+  - waveName: Mixed Wave
+    enemyGroups:
+    - enemyPrefab: {fileID: 8846257112448239548, guid: cc1a5695a57515a43932f4b6ad1fcd56, type: 3}
+      enemyCount: 6
+      spawnDelay: 0.4
+    - enemyPrefab: {fileID: 8846257112448239548, guid: 9cb189d13706ce040884d9d06243c1b8, type: 3}
+      enemyCount: 3
+      spawnDelay: 0.4
+  - waveName: Final Challenge
+    enemyGroups:
+    - enemyPrefab: {fileID: 8846257112448239548, guid: cc1a5695a57515a43932f4b6ad1fcd56, type: 3}
+      enemyCount: 8
+      spawnDelay: 0.35
+    - enemyPrefab: {fileID: 8846257112448239548, guid: 9cb189d13706ce040884d9d06243c1b8, type: 3}
+      enemyCount: 4
+      spawnDelay: 0.35
   firstWaveDelay: 1
   delayBetweenWaves: 2
   enemySpawner: {fileID: 2055623508}
