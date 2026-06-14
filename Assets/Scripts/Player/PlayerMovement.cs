@@ -51,4 +51,13 @@ public class PlayerMovement : MonoBehaviour
             rb.linearVelocity = Vector2.zero;
         }
     }
+
+    /// Increases the player's movement speed.
+    /// Used by level-up upgrades.
+    public void IncreaseMoveSpeed(float amount)
+    {
+        moveSpeed += amount;
+
+        Debug.Log("Move speed increased to: " + moveSpeed);
+    }
 }

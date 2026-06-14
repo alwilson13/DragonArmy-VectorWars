@@ -19,6 +19,9 @@ public class PlayerShooting : MonoBehaviour
     [Tooltip("How many bullets the player can shoot per second.")]
     [SerializeField] private float fireRate = 5f;
 
+    [Tooltip("Extra damage added to every bullet fired by the player.")]
+    [SerializeField] private int bulletDamageBonus = 0;
+
     // Controls when the player can shoot again.
     private float nextFireTime;
 
@@ -71,6 +74,25 @@ public class PlayerShooting : MonoBehaviour
         if (bulletScript != null)
         {
             bulletScript.SetDirection(shootDirection);
+            bulletScript.AddDamageBonus(bulletDamageBonus);
         }
+    }
+
+    /// Increases the player's fire rate.
+    /// Used by level-up upgrades.
+    public void IncreaseFireRate(float amount)
+    {
+        fireRate += amount;
+
+        Debug.Log("Fire rate increased to: " + fireRate);
+    }
+
+    /// Increases the damage bonus applied to newly fired bullets.
+    /// Used by level-up upgrades.
+    public void IncreaseBulletDamage(int amount)
+    {
+        bulletDamageBonus += amount;
+
+        Debug.Log("Bullet damage bonus increased to: " + bulletDamageBonus);
     }
 }

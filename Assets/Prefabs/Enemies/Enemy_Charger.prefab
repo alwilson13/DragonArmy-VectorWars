@@ -171,7 +171,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f6b90c7585d53743b8f8c02c17a6245, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
-  maxHealth: 2
+  maxHealth: 5
   scoreValue: 250
   xpOrbPrefab: {fileID: 4468346817734986113, guid: 342fbbf8ca1b0ed429911f8245a8f809, type: 3}
   xpValue: 50

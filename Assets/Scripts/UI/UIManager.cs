@@ -26,6 +26,9 @@ public class UIManager : MonoBehaviour
     [Tooltip("Text that displays the player's current XP.")]
     [SerializeField] private TMP_Text xpText;
 
+    [Tooltip("Text that displays the player's current level.")]
+    [SerializeField] private TMP_Text levelText;
+
     [Header("Panels")]
 
     [Tooltip("Panel shown when the player dies.")]
@@ -135,6 +138,7 @@ public class UIManager : MonoBehaviour
         UpdateWaveText();
         UpdateScoreText();
         UpdateXPText();
+        UpdateLevelText();
     }
 
     /// Updates the health text using PlayerHealth values.
@@ -182,6 +186,17 @@ public class UIManager : MonoBehaviour
             + playerExperience.GetCurrentXP()
             + " / "
             + playerExperience.GetXPToNextLevel();
+    }
+
+    /// Updates the level text using PlayerExperience values.
+    private void UpdateLevelText()
+    {
+        if (levelText == null || playerExperience == null)
+        {
+            return;
+        }
+
+        levelText.text = "Level: " + playerExperience.GetCurrentLevel();
     }
 
     /// Shows the Game Over panel.

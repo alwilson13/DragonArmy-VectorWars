@@ -77,4 +77,11 @@ public class Bullet : MonoBehaviour
             Destroy(gameObject);
         }
     }
+
+    /// Adds bonus damage to this bullet.
+    /// Called by PlayerShooting when the bullet is created.
+    public void AddDamageBonus(int bonusDamage)
+    {
+        damage += bonusDamage;
+    }
 }

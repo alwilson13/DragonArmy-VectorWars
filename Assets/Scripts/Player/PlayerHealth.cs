@@ -169,4 +169,14 @@ public class PlayerHealth : MonoBehaviour
     {
         return isDead;
     }
+
+    /// Increases the player's maximum health and also heals them by the same amount.
+    /// Used by level-up upgrades.
+    public void IncreaseMaxHealth(int amount)
+    {
+        maxHealth += amount;
+        currentHealth += amount;
+
+        Debug.Log("Max health increased to: " + maxHealth);
+    }
 }
