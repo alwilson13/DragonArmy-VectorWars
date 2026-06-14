@@ -40,6 +40,9 @@ public class UIManager : MonoBehaviour
     [Tooltip("Panel shown when the player pauses the game.")]
     [SerializeField] private GameObject pausePanel;
 
+    [Tooltip("Panel shown at the start of the game.")]
+    [SerializeField] private GameObject launchPanel;
+
     [Header("References")]
 
     [Tooltip("Reference to the player's health script.")]
@@ -60,6 +63,9 @@ public class UIManager : MonoBehaviour
 
     // Tracks whether the game is currently paused.
     private bool isPaused;
+
+    // Tracks whether the game is still waiting at the launch screen.
+    private bool isLaunchScreenOpen = true;
 
     private void Awake()
     {
@@ -111,8 +117,20 @@ public class UIManager : MonoBehaviour
             pausePanel.SetActive(false);
         }
 
-        // Make sure time is normal when the scene starts.
-        Time.timeScale = 1f;
+        // Show launch panel at the start.
+        if (launchPanel != null)
+        {
+            launchPanel.SetActive(true);
+            isLaunchScreenOpen = true;
+
+            // Pause the game until the player clicks Start Game.
+            Time.timeScale = 0f;
+        }
+        else
+        {
+            isLaunchScreenOpen = false;
+            Time.timeScale = 1f;
+        }
 
         // Update UI immediately at the start.
         UpdateHUD();
@@ -120,14 +138,13 @@ public class UIManager : MonoBehaviour
 
     private void Update()
     {
-        // Press Escape to pause or resume the game.
-        if (Input.GetKeyDown(KeyCode.Escape))
+        // Do not allow pause menu while the launch screen is open.
+        if (!isLaunchScreenOpen && Input.GetKeyDown(KeyCode.Escape))
         {
             TogglePause();
         }
 
         // For now, update the HUD every frame.
-        // Later, we can optimize this using events.
         UpdateHUD();
     }
 
@@ -257,11 +274,10 @@ public class UIManager : MonoBehaviour
     }
 
     /// Toggles between paused and unpaused gameplay.
-    /// This is called when the player presses Escape.
     public void TogglePause()
     {
-        // Do not allow pausing after Game Over or Victory.
-        if (gameEnded)
+        // Do not allow pausing from launch screen or after game end.
+        if (gameEnded || isLaunchScreenOpen)
         {
             return;
         }
@@ -277,11 +293,10 @@ public class UIManager : MonoBehaviour
     }
 
     /// Pauses gameplay and shows the pause menu.
-    /// Time.timeScale = 0 freezes physics, movement, enemies, and wave timing.
     public void PauseGame()
     {
-        // Do not pause if the game already ended.
-        if (gameEnded)
+        // Do not pause if the game already ended or launch screen is open.
+        if (gameEnded || isLaunchScreenOpen)
         {
             return;
         }
@@ -294,6 +309,20 @@ public class UIManager : MonoBehaviour
         {
             pausePanel.SetActive(true);
         }
+    }
+
+    /// Starts gameplay from the launch screen.
+    /// Hides the launch panel and resumes game time.
+    public void StartGame()
+    {
+        isLaunchScreenOpen = false;
+
+        if (launchPanel != null)
+        {
+            launchPanel.SetActive(false);
+        }
+
+        Time.timeScale = 1f;
     }
 
     /// Resumes gameplay and hides the pause menu.
