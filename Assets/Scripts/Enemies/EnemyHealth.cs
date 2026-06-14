@@ -1,9 +1,9 @@
 using UnityEngine;
 
-/// Handles enemy health, damage, death, score reward, and explosion effects.
+/// Handles enemy health, damage, death, score reward, XP drops, and explosion effects.
 /// 
-/// Enemies give score when destroyed by player attacks.
-/// Enemies do not give score when they explode after hitting the player.
+/// Enemies give score and drop XP when destroyed by player attacks.
+/// Enemies do not give score or XP when they explode after hitting the player.
 public class EnemyHealth : MonoBehaviour
 {
     [Header("Health Settings")]
@@ -15,6 +15,14 @@ public class EnemyHealth : MonoBehaviour
 
     [Tooltip("How many points the player earns for destroying this enemy.")]
     [SerializeField] private int scoreValue = 100;
+
+    [Header("XP Settings")]
+
+    [Tooltip("XP orb prefab spawned when this enemy is destroyed by the player.")]
+    [SerializeField] private GameObject xpOrbPrefab;
+
+    [Tooltip("How much XP this enemy drops when destroyed by the player.")]
+    [SerializeField] private int xpValue = 25;
 
     [Header("Death Effects")]
 
@@ -43,19 +51,18 @@ public class EnemyHealth : MonoBehaviour
             return;
         }
 
-        // Subtract damage from current health.
         currentHealth -= damageAmount;
 
         Debug.Log(gameObject.name + " took " + damageAmount + " damage. Health left: " + currentHealth);
 
-        // If health is zero or below, kill the enemy and award score.
+        // If health is zero or below, kill the enemy and reward the player.
         if (currentHealth <= 0)
         {
             Die(true);
         }
     }
 
-    /// Instantly kills the enemy without giving score.
+    /// Instantly kills the enemy without giving score or XP.
     /// This is used when the enemy hits the player and explodes.
     public void ExplodeAndDie()
     {
@@ -64,36 +71,69 @@ public class EnemyHealth : MonoBehaviour
             return;
         }
 
-        // False means no score is awarded.
+        // False means no score and no XP are awarded.
         Die(false);
     }
 
     /// Handles enemy death.
-    /// Can optionally award score depending on how the enemy died.
-    private void Die(bool awardScore)
+    /// Can optionally award score and drop XP depending on how the enemy died.
+    private void Die(bool rewardPlayer)
     {
         isDead = true;
 
         Debug.Log(gameObject.name + " exploded.");
 
-        // Award score only if the player destroyed the enemy.
-        if (awardScore)
+        // Reward the player only if the enemy was destroyed by player damage.
+        if (rewardPlayer)
         {
-            ScoreManager scoreManager = FindFirstObjectByType<ScoreManager>();
-
-            if (scoreManager != null)
-            {
-                scoreManager.AddScore(scoreValue);
-            }
+            AwardScore();
+            DropXP();
         }
 
-        // Spawn the explosion effect at the enemy's position.
+        SpawnExplosion();
+
+        Destroy(gameObject);
+    }
+
+    /// Adds score to the ScoreManager.
+    private void AwardScore()
+    {
+        ScoreManager scoreManager = FindFirstObjectByType<ScoreManager>();
+
+        if (scoreManager != null)
+        {
+            scoreManager.AddScore(scoreValue);
+        }
+    }
+
+    /// Spawns an XP orb at the enemy's position.
+    private void DropXP()
+    {
+        if (xpOrbPrefab == null)
+        {
+            return;
+        }
+
+        GameObject newXPOrb = Instantiate(
+            xpOrbPrefab,
+            transform.position,
+            Quaternion.identity
+        );
+
+        XPOrb xpOrb = newXPOrb.GetComponent<XPOrb>();
+
+        if (xpOrb != null)
+        {
+            xpOrb.SetXPValue(xpValue);
+        }
+    }
+
+    /// Spawns the enemy explosion effect.
+    private void SpawnExplosion()
+    {
         if (explosionPrefab != null)
         {
             Instantiate(explosionPrefab, transform.position, Quaternion.identity);
         }
-
-        // Destroy this enemy GameObject.
-        Destroy(gameObject);
     }
 }

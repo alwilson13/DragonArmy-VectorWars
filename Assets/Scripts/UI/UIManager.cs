@@ -2,6 +2,10 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
 /// Handles the main gameplay UI for Vector wars.
 /// 
 /// This script updates health, wave, and score text.
@@ -19,6 +23,9 @@ public class UIManager : MonoBehaviour
     [Tooltip("Text that displays the player's score.")]
     [SerializeField] private TMP_Text scoreText;
 
+    [Tooltip("Text that displays the player's current XP.")]
+    [SerializeField] private TMP_Text xpText;
+
     [Header("Panels")]
 
     [Tooltip("Panel shown when the player dies.")]
@@ -26,6 +33,9 @@ public class UIManager : MonoBehaviour
 
     [Tooltip("Panel shown when the player clears all waves.")]
     [SerializeField] private GameObject victoryPanel;
+
+    [Tooltip("Panel shown when the player pauses the game.")]
+    [SerializeField] private GameObject pausePanel;
 
     [Header("References")]
 
@@ -38,20 +48,32 @@ public class UIManager : MonoBehaviour
     [Tooltip("Reference to the ScoreManager script.")]
     [SerializeField] private ScoreManager scoreManager;
 
+    [Tooltip("Reference to the PlayerExperience script.")]
+    [SerializeField] private PlayerExperience playerExperience;
+
 
     // Prevents Game Over and Victory from showing at the same time.
     private bool gameEnded;
 
+    // Tracks whether the game is currently paused.
+    private bool isPaused;
+
     private void Awake()
     {
-        // If PlayerHealth is not assigned, try to find the player by tag.
-        if (playerHealth == null)
-        {
-            GameObject playerObject = GameObject.FindGameObjectWithTag("Player");
+        // If PlayerHealth or PlayerExperience is not assigned,
+        // try to find the player by tag.
+        GameObject playerObject = GameObject.FindGameObjectWithTag("Player");
 
-            if (playerObject != null)
+        if (playerObject != null)
+        {
+            if (playerHealth == null)
             {
                 playerHealth = playerObject.GetComponent<PlayerHealth>();
+            }
+
+            if (playerExperience == null)
+            {
+                playerExperience = playerObject.GetComponent<PlayerExperience>();
             }
         }
 
@@ -81,12 +103,26 @@ public class UIManager : MonoBehaviour
             victoryPanel.SetActive(false);
         }
 
+        if (pausePanel != null)
+        {
+            pausePanel.SetActive(false);
+        }
+
+        // Make sure time is normal when the scene starts.
+        Time.timeScale = 1f;
+
         // Update UI immediately at the start.
         UpdateHUD();
     }
 
     private void Update()
     {
+        // Press Escape to pause or resume the game.
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            TogglePause();
+        }
+
         // For now, update the HUD every frame.
         // Later, we can optimize this using events.
         UpdateHUD();
@@ -98,6 +134,7 @@ public class UIManager : MonoBehaviour
         UpdateHealthText();
         UpdateWaveText();
         UpdateScoreText();
+        UpdateXPText();
     }
 
     /// Updates the health text using PlayerHealth values.
@@ -131,6 +168,20 @@ public class UIManager : MonoBehaviour
         }
 
         scoreText.text = "Score: " + scoreManager.GetCurrentScore();
+    }
+
+    /// Updates the XP text using PlayerExperience values.
+    private void UpdateXPText()
+    {
+        if (xpText == null || playerExperience == null)
+        {
+            return;
+        }
+
+        xpText.text = "XP: "
+            + playerExperience.GetCurrentXP()
+            + " / "
+            + playerExperience.GetXPToNextLevel();
     }
 
     /// Shows the Game Over panel.
@@ -184,6 +235,77 @@ public class UIManager : MonoBehaviour
     /// This is used by the restart buttons.
     public void RestartGame()
     {
+        // Reset time in case the game was paused.
+        Time.timeScale = 1f;
+
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    /// Toggles between paused and unpaused gameplay.
+    /// This is called when the player presses Escape.
+    public void TogglePause()
+    {
+        // Do not allow pausing after Game Over or Victory.
+        if (gameEnded)
+        {
+            return;
+        }
+
+        if (isPaused)
+        {
+            ResumeGame();
+        }
+        else
+        {
+            PauseGame();
+        }
+    }
+
+    /// Pauses gameplay and shows the pause menu.
+    /// Time.timeScale = 0 freezes physics, movement, enemies, and wave timing.
+    public void PauseGame()
+    {
+        // Do not pause if the game already ended.
+        if (gameEnded)
+        {
+            return;
+        }
+
+        isPaused = true;
+
+        Time.timeScale = 0f;
+
+        if (pausePanel != null)
+        {
+            pausePanel.SetActive(true);
+        }
+    }
+
+    /// Resumes gameplay and hides the pause menu.
+    public void ResumeGame()
+    {
+        isPaused = false;
+
+        Time.timeScale = 1f;
+
+        if (pausePanel != null)
+        {
+            pausePanel.SetActive(false);
+        }
+    }
+
+    /// Quits the game.
+    /// This works in a built game. In the Unity Editor, it prints a debug message.
+    public void QuitGame()
+    {
+        Debug.Log("Quit Game requested.");
+
+        #if UNITY_EDITOR
+            // Stop Play Mode when testing inside Unity Editor.
+            EditorApplication.isPlaying = false;
+        #else
+            // Quit the actual built game.
+            Application.Quit();
+        #endif
     }
 }

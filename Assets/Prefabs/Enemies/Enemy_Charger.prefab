@@ -84,7 +84,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 8
   m_MaskInteraction: 0
   m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
   m_Color: {r: 1, g: 0.2705882, b: 0, a: 1}
@@ -173,6 +173,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
   maxHealth: 2
   scoreValue: 250
+  xpOrbPrefab: {fileID: 4468346817734986113, guid: 342fbbf8ca1b0ed429911f8245a8f809, type: 3}
+  xpValue: 50
   explosionPrefab: {fileID: 1358521827884425754, guid: fac559bc1b1fd4042aa4751fd54e7ddf, type: 3}
 --- !u!114 &9072707957825278172
 MonoBehaviour:
