@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 /// Controls wave progression for Vector wars.
@@ -128,21 +129,32 @@ public class WaveManager : MonoBehaviour
         }
     }
 
-    /// Checks whether all enemies in the current wave are dead.
+    /// Checks if all enemies in the current wave are dead.
+    /// If they are, either starts the next wave or prepares Victory after rewards.
     private void CheckWaveCompletion()
     {
-        // Remove destroyed enemies from the active list.
+        // Remove destroyed enemies from the active enemy list.
         activeEnemies.RemoveAll(enemy => enemy == null);
 
-        // If no enemies remain, the wave is complete.
-        if (activeEnemies.Count == 0)
+        // If enemies are still alive, the wave is not complete.
+        if (activeEnemies.Count > 0)
         {
-            waveInProgress = false;
+            return;
+        }
 
-            Debug.Log("Wave " + (currentWaveIndex + 1) + " complete.");
+        waveInProgress = false;
 
-            currentWaveIndex++;
+        Debug.Log("Wave " + (currentWaveIndex + 1) + " complete.");
 
+        currentWaveIndex++;
+
+        // If this was the final wave, wait for XP orbs and level-up before Victory.
+        if (currentWaveIndex >= waves.Length)
+        {
+            StartCoroutine(WaitForRewardsThenVictory());
+        }
+        else
+        {
             StartCoroutine(StartNextWaveAfterDelay());
         }
     }
@@ -187,5 +199,32 @@ public class WaveManager : MonoBehaviour
     public int GetTotalWaves()
     {
         return waves.Length;
+    }
+
+    /// Waits for the player to collect all XP orbs and finish any level-up menu
+    /// before showing the Victory screen.
+    private IEnumerator WaitForRewardsThenVictory()
+    {
+        Debug.Log("Final wave cleared. Waiting for remaining XP orbs.");
+
+        // Wait while XP orbs still exist in the scene.
+        while (FindObjectsByType<XPOrb>(FindObjectsSortMode.None).Length > 0)
+        {
+            yield return null;
+        }
+
+        Debug.Log("All XP orbs collected. Checking for level-up menu.");
+
+        // Find the LevelUpManager.
+        LevelUpManager levelUpManager = FindFirstObjectByType<LevelUpManager>();
+
+        // Wait while the level-up menu is open.
+        while (levelUpManager != null && levelUpManager.IsLevelUpOpen())
+        {
+            yield return null;
+        }
+
+        // Now it is safe to show Victory.
+        Victory();
     }
 }
