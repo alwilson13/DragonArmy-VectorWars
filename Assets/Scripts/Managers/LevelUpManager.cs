@@ -1,17 +1,5 @@
 using UnityEngine;
 
-/// Controls the level up menu and upgrade selection process.
-///
-/// The LevelUpManager is responsible for:
-/// - Opening the level up menu when the player gains a level.
-/// - Pausing gameplay while the player selects an upgrade.
-/// - Applying the selected upgrade.
-/// - Resuming gameplay after a selection is made.
-///
-/// Currently implemented upgrades:
-/// - Movement Speed Increase
-///
-/// Additional upgrades can be added later as the progression system expands.
 public class LevelUpManager : MonoBehaviour
 {
     [Header("Menu References")]
@@ -23,11 +11,15 @@ public class LevelUpManager : MonoBehaviour
 
     [Tooltip("Reference to the PlayerMovement component for applying upgrades.")]
     [SerializeField] private PlayerMovement playerMovement;
+    [SerializeField] private PlayerHealth playerHealth;
+    [SerializeField] private PlayerShooting playerShooting;
 
     [Header("Upgrade Settings")]
 
     [Tooltip("Amount added to player movement speed when the speed upgrade is selected.")]
-    [SerializeField] private float moveSpeedIncrease = 1f;
+    [SerializeField] private float moveSpeedIncrease = 1f; 
+    [SerializeField] private int maxHealthIncrease = 1;
+    [SerializeField] private float fireRateIncrease = 0.05f;
 
     // Tracks whether the level up menu is currently open.
     private bool isLevelUpMenuOpen;
@@ -45,23 +37,41 @@ public class LevelUpManager : MonoBehaviour
         {
             playerMovement = FindFirstObjectByType<PlayerMovement>();
         }
+
+        if (playerHealth == null)
+        {
+            playerHealth = FindFirstObjectByType<PlayerHealth>();
+        }
+
+        if (playerShooting == null)
+        {
+            playerShooting = FindFirstObjectByType<PlayerShooting>();
+        }
     }
 
     /// Opens the level up menu and pauses gameplay.
     public void OpenLevelUpMenu()
     {
+        Debug.Log("OpenLevelUpMenu was called.");
+
         if (levelUpMenu == null)
         {
-            Debug.LogWarning("LevelUpManager is missing the Level Up Menu reference.");
+            Debug.LogError("Level Up Menu reference is NULL.");
             return;
+        }
+        else
+        {
+            Debug.Log("Level Up Menu reference is: " + levelUpMenu.name);
         }
 
         isLevelUpMenuOpen = true;
 
-        // Pause gameplay while the player chooses an upgrade.
         Time.timeScale = 0f;
 
         levelUpMenu.SetActive(true);
+
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
     }
 
     /// Applies the movement speed upgrade and closes the menu.
@@ -81,6 +91,34 @@ public class LevelUpManager : MonoBehaviour
         CloseLevelUpMenu();
     }
 
+    public void SelectHealthUpgrade()
+    {
+        if (playerHealth != null)
+        {
+            playerHealth.IncreaseMaxHealth(maxHealthIncrease);
+        }
+        else
+        {
+            Debug.LogWarning("LevelUpManager could not find PlayerHealth.");
+        }
+
+        CloseLevelUpMenu();
+    }
+
+    public void SelectFireRateUpgrade()
+    {
+        if (playerShooting != null)
+        {
+            playerShooting.IncreaseFireRate(fireRateIncrease);
+        }
+        else
+        {
+            Debug.LogWarning("LevelUpManager could not find PlayerShooting.");
+        }
+
+        CloseLevelUpMenu();
+    }
+
     /// Closes the level up menu and resumes gameplay.
     public void CloseLevelUpMenu()
     {
@@ -91,8 +129,10 @@ public class LevelUpManager : MonoBehaviour
             levelUpMenu.SetActive(false);
         }
 
-        // Resume gameplay after an upgrade is selected.
         Time.timeScale = 1f;
+
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
     }
 
     /// Returns whether the level up menu is currently open.

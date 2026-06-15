@@ -86,6 +86,14 @@ public class PlayerHealth : MonoBehaviour
         isInvincible = false;
     }
 
+    public void IncreaseMaxHealth(int amount)
+    {
+        maxHealth += amount;
+        currentHealth += amount;
+
+        Debug.Log("New Max Health: " + maxHealth);
+    }
+
     /// Handles player death.
     /// For now, this disables movement and shooting and prints a Game Over message.
     private void Die()

@@ -77,14 +77,18 @@ public class PlayerLevel : MonoBehaviour
     {
         currentLevel++;
 
-        // Recalculate the XP requirement for the next level.
         xpToNextLevel = CalculateXPRequirement(currentLevel);
 
-        Debug.Log("Level Up! Current Level: " + currentLevel);
+        Debug.Log("LEVEL UP FIRED");
 
         if (levelUpManager != null)
         {
+            Debug.Log("Opening Level Up Menu");
             levelUpManager.OpenLevelUpMenu();
+        }
+        else
+        {
+            Debug.LogError("LevelUpManager is NULL");
         }
     }
 

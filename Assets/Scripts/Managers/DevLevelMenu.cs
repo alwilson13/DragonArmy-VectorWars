@@ -1,12 +1,5 @@
 using UnityEngine;
 
-/// Temporary developer menu used to test the level progression system.
-///
-/// This menu allows developers to manually add XP and trigger level ups
-/// without needing enemy XP drops, pickups, or wave progression.
-///
-/// These functions are intended to be connected to UI Buttons in the scene
-/// and may be removed or disabled once the XP drop system is complete.
 public class DevLevelMenu : MonoBehaviour
 {
     [Header("References")]

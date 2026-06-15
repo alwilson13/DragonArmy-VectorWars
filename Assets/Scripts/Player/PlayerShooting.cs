@@ -73,4 +73,11 @@ public class PlayerShooting : MonoBehaviour
             bulletScript.SetDirection(shootDirection);
         }
     }
+
+    public void IncreaseFireRate(float amount)
+    {
+        fireRate += amount;
+
+        Debug.Log("New Fire Rate: " + fireRate);
+    }
 }
