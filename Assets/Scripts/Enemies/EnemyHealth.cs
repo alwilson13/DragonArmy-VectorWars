@@ -42,6 +42,13 @@ public class EnemyHealth : MonoBehaviour
     {
         Debug.Log(gameObject.name + " died.");
 
+        EnemyXPDrop xpDrop = GetComponent<EnemyXPDrop>();
+
+        if (xpDrop != null)
+        {
+            xpDrop.DropXP();
+        }
+
         // Destroy this enemy GameObject.
         Destroy(gameObject);
     }

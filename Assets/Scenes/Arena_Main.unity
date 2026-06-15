@@ -1132,6 +1132,7 @@ GameObject:
   - component: {fileID: 596836333}
   - component: {fileID: 596836332}
   - component: {fileID: 596836331}
+  - component: {fileID: 596836339}
   - component: {fileID: 596836335}
   - component: {fileID: 596836336}
   - component: {fileID: 596836337}
@@ -1337,6 +1338,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
   maxHealth: 5
   invincibilityDuration: 1
+--- !u!114 &596836339
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 596836330}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54943616a7832f748bc6fd99e203dc50, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerLevel
+  currentLevel: 1
+  currentXP: 0
+  xpToNextLevel: 10
+  baseXPRequirement: 5
+  xpIncreasePerLevel: 5
+  levelInterval: 5
+  intervalMultiplierIncrease: 1
+  levelUpManager: {fileID: 0}
 --- !u!1 &664400949
 GameObject:
   m_ObjectHideFlags: 0

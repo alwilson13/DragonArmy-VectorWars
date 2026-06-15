@@ -121,6 +121,11 @@ public class PlayerHealth : MonoBehaviour
         {
             rb.linearVelocity = Vector2.zero;
         }
+
+        //if (GameManager.instance != null)
+        //{
+        //    GameManager.instance.YouLose();
+        //}
     }
 
     /// Returns the player's current health.

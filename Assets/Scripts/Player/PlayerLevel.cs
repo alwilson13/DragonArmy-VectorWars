@@ -1,16 +1,5 @@
 using UnityEngine;
 
-/// Tracks player experience, level progression, and XP requirements.
-///
-/// The PlayerLevel system is responsible for:
-/// - Storing the player's current level.
-/// - Tracking current XP.
-/// - Calculating XP requirements for future levels.
-/// - Triggering the level up menu when a level is gained.
-///
-/// XP requirements increase as the player's level increases.
-/// Additional scaling is applied at level intervals to slow progression
-/// during longer runs.
 public class PlayerLevel : MonoBehaviour
 {
     [Header("Level Stats")]
@@ -37,8 +26,6 @@ public class PlayerLevel : MonoBehaviour
 
     [Tooltip("Multiplier applied each level interval to increase progression difficulty.")]
     [SerializeField] private float intervalMultiplierIncrease = 1.5f;
-
-    [Header("References")]
 
     [Tooltip("Reference to the LevelUpManager used to display upgrades.")]
     [SerializeField] private LevelUpManager levelUpManager;

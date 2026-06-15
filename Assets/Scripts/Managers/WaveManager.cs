@@ -151,6 +151,11 @@ public class WaveManager : MonoBehaviour
     private void Victory()
     {
         Debug.Log("Victory! All waves cleared.");
+
+        if (GameManager.instance != null)
+        {
+            GameManager.instance.YouWon();
+        }
     }
 
     /// Returns the current wave number for UI later.

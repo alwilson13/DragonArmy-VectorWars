@@ -69,6 +69,9 @@ public class GameManager : MonoBehaviour
 
     public void YouWon()
     {
+        if (activeMenu != null)
+            return;
+
         Pause();
         activeMenu = winMenu;
         activeMenu.SetActive(true);
@@ -76,6 +79,9 @@ public class GameManager : MonoBehaviour
 
     public void YouLose()
     {
+        if (activeMenu != null)
+            return;
+
         Pause();
         activeMenu = loseMenu;
         activeMenu.SetActive(true);
