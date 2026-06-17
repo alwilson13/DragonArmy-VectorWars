@@ -88,6 +88,7 @@ public class EnemyHealth : MonoBehaviour
         {
             AwardScore();
             DropXP();
+            TryDropWeaponPickup();
         }
 
         SpawnExplosion();
@@ -125,6 +126,18 @@ public class EnemyHealth : MonoBehaviour
         if (xpOrb != null)
         {
             xpOrb.SetXPValue(xpValue);
+        }
+    }
+
+    /// Gives the PickupDropManager a chance to spawn a weapon pickup.
+    /// This only happens when the enemy was killed by player damage.
+    private void TryDropWeaponPickup()
+    {
+        PickupDropManager pickupDropManager = FindFirstObjectByType<PickupDropManager>();
+
+        if (pickupDropManager != null)
+        {
+            pickupDropManager.TryDropWeaponPickup(transform.position);
         }
     }
 

@@ -5537,6 +5537,7 @@ GameObject:
   - component: {fileID: 2055623510}
   - component: {fileID: 2055623511}
   - component: {fileID: 2055623512}
+  - component: {fileID: 2055623513}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -5695,6 +5696,21 @@ MonoBehaviour:
   playerMovement: {fileID: 596836335}
   playerShooting: {fileID: 596836337}
   playerHealth: {fileID: 596836338}
+--- !u!114 &2055623513
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2055623506}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 60866f86fdc32c8408857207d66cb957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PickupDropManager
+  weaponPickupPrefab: {fileID: 4968633684730932204, guid: 60957f159188a0240b46c5cb32681da2, type: 3}
+  weaponDropChance: 0.25
+  maxWeaponDropsPerRun: 1
 --- !u!1 &2058060702
 GameObject:
   m_ObjectHideFlags: 0
@@ -5959,63 +5975,6 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_RenderingLayers: 1
   m_ShadowRenderingLayers: 1
---- !u!1001 &6621956647303737893
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 1274460658704220541, guid: 60957f159188a0240b46c5cb32681da2, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -1.87
-      objectReference: {fileID: 0}
-    - target: {fileID: 1274460658704220541, guid: 60957f159188a0240b46c5cb32681da2, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 1274460658704220541, guid: 60957f159188a0240b46c5cb32681da2, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1274460658704220541, guid: 60957f159188a0240b46c5cb32681da2, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1274460658704220541, guid: 60957f159188a0240b46c5cb32681da2, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1274460658704220541, guid: 60957f159188a0240b46c5cb32681da2, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1274460658704220541, guid: 60957f159188a0240b46c5cb32681da2, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1274460658704220541, guid: 60957f159188a0240b46c5cb32681da2, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1274460658704220541, guid: 60957f159188a0240b46c5cb32681da2, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1274460658704220541, guid: 60957f159188a0240b46c5cb32681da2, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4968633684730932204, guid: 60957f159188a0240b46c5cb32681da2, type: 3}
-      propertyPath: m_Name
-      value: WeaponPickup_Spread
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 60957f159188a0240b46c5cb32681da2, type: 3}
 --- !u!1001 &7792746480714389558
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6085,4 +6044,3 @@ SceneRoots:
   - {fileID: 7792746480714389558}
   - {fileID: 1048052066}
   - {fileID: 1514775719}
-  - {fileID: 6621956647303737893}
