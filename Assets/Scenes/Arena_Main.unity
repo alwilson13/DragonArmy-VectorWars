@@ -1330,6 +1330,8 @@ MonoBehaviour:
   fireRate: 5
   bulletDamageBonus: 0
   currentWeapon: 0
+  spreadBulletCount: 3
+  spreadAngle: 30
 --- !u!114 &596836338
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5592,7 +5594,7 @@ MonoBehaviour:
     enemyGroups:
     - enemyPrefab: {fileID: 8846257112448239548, guid: cc1a5695a57515a43932f4b6ad1fcd56, type: 3}
       enemyCount: 3
-      spawnDelay: 0.5
+      spawnDelay: 0.6
   - waveName: More Pressure
     enemyGroups:
     - enemyPrefab: {fileID: 8846257112448239548, guid: cc1a5695a57515a43932f4b6ad1fcd56, type: 3}
@@ -5605,23 +5607,26 @@ MonoBehaviour:
       spawnDelay: 0.5
     - enemyPrefab: {fileID: 8846257112448239548, guid: 9cb189d13706ce040884d9d06243c1b8, type: 3}
       enemyCount: 2
-      spawnDelay: 0.5
-  - waveName: Mixed Wave
+      spawnDelay: 0.8
+  - waveName: First Flanker
     enemyGroups:
     - enemyPrefab: {fileID: 8846257112448239548, guid: cc1a5695a57515a43932f4b6ad1fcd56, type: 3}
-      enemyCount: 6
+      enemyCount: 4
       spawnDelay: 0.4
-    - enemyPrefab: {fileID: 8846257112448239548, guid: 9cb189d13706ce040884d9d06243c1b8, type: 3}
+    - enemyPrefab: {fileID: 8846257112448239548, guid: 65383563fb6402e46bef12452dadfc62, type: 3}
       enemyCount: 3
-      spawnDelay: 0.4
+      spawnDelay: 0.7
   - waveName: Final Challenge
     enemyGroups:
     - enemyPrefab: {fileID: 8846257112448239548, guid: cc1a5695a57515a43932f4b6ad1fcd56, type: 3}
-      enemyCount: 8
+      enemyCount: 6
       spawnDelay: 0.35
     - enemyPrefab: {fileID: 8846257112448239548, guid: 9cb189d13706ce040884d9d06243c1b8, type: 3}
-      enemyCount: 4
-      spawnDelay: 0.35
+      enemyCount: 3
+      spawnDelay: 0.7
+    - enemyPrefab: {fileID: 8846257112448239548, guid: 65383563fb6402e46bef12452dadfc62, type: 3}
+      enemyCount: 3
+      spawnDelay: 0.7
   firstWaveDelay: 1
   delayBetweenWaves: 2
   enemySpawner: {fileID: 2055623508}
