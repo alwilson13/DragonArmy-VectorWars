@@ -32,6 +32,9 @@ public class UIManager : MonoBehaviour
     [Tooltip("Text that displays player combat stats.")]
     [SerializeField] private TMP_Text statsText;
 
+    [Tooltip("Text that displays the player's current weapon.")]
+    [SerializeField] private TMP_Text weaponText;
+
     [Header("Panels")]
 
     [Tooltip("Panel shown when the player dies.")]
@@ -176,6 +179,7 @@ public class UIManager : MonoBehaviour
         UpdateXPText();
         UpdateLevelText();
         UpdateStatsText();
+        UpdateWeaponText();
     }
 
     /// Updates the health text using PlayerHealth values.
@@ -249,6 +253,17 @@ public class UIManager : MonoBehaviour
             "Fire Rate: " + playerShooting.GetFireRate().ToString("0.0") + "\n" +
             "Damage: " + playerShooting.GetCurrentBulletDamage() + "\n" +
             "Speed: " + playerMovement.GetMoveSpeed().ToString("0.0");
+    }
+
+    /// Updates the current weapon text.
+    private void UpdateWeaponText()
+    {
+        if (weaponText == null || playerShooting == null)
+        {
+            return;
+        }
+
+        weaponText.text = "Weapon: " + playerShooting.GetCurrentWeaponName();
     }
 
     /// Shows the Game Over panel.

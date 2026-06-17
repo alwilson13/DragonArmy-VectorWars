@@ -22,6 +22,9 @@ public class PlayerShooting : MonoBehaviour
     [Tooltip("Extra damage added to every bullet fired by the player.")]
     [SerializeField] private int bulletDamageBonus = 0;
 
+    [Tooltip("The weapon the player is currently using.")]
+    [SerializeField] private WeaponType currentWeapon = WeaponType.Standard;
+
     // Controls when the player can shoot again.
     private float nextFireTime;
 
@@ -108,5 +111,28 @@ public class PlayerShooting : MonoBehaviour
     public int GetCurrentBulletDamage()
     {
         return 1 + bulletDamageBonus;
+    }
+
+    /// Changes the player's current weapon.
+    /// Called when the player collects a weapon pickup.
+    public void SetWeapon(WeaponType newWeapon)
+    {
+        currentWeapon = newWeapon;
+
+        Debug.Log("Weapon changed to: " + currentWeapon);
+    }
+
+    /// Returns the player's current weapon.
+    /// Used by UI and weapon pickup logic.
+    public WeaponType GetCurrentWeapon()
+    {
+        return currentWeapon;
+    }
+
+    /// Returns the current weapon name as text.
+    /// Used by the UI.
+    public string GetCurrentWeaponName()
+    {
+        return currentWeapon.ToString();
     }
 }
