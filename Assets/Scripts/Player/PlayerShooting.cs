@@ -1,9 +1,10 @@
 using UnityEngine;
 
-/// Handles basic player shooting for Vector wars.
+/// Handles player shooting for Vector Wars.
 /// 
-/// The player fires bullets from the FirePoint.
-/// Bullets travel in the direction the player is currently facing.
+/// The player can use different weapon types.
+/// Standard fires one bullet.
+/// Spread fires multiple bullets in a cone.
 public class PlayerShooting : MonoBehaviour
 {
     [Header("Shooting References")]
@@ -16,7 +17,7 @@ public class PlayerShooting : MonoBehaviour
 
     [Header("Shooting Settings")]
 
-    [Tooltip("How many bullets the player can shoot per second.")]
+    [Tooltip("How many times the player can shoot per second.")]
     [SerializeField] private float fireRate = 5f;
 
     [Tooltip("Extra damage added to every bullet fired by the player.")]
@@ -24,6 +25,14 @@ public class PlayerShooting : MonoBehaviour
 
     [Tooltip("The weapon the player is currently using.")]
     [SerializeField] private WeaponType currentWeapon = WeaponType.Standard;
+
+    [Header("Spread Shot Settings")]
+
+    [Tooltip("How many bullets the Spread weapon fires.")]
+    [SerializeField] private int spreadBulletCount = 3;
+
+    [Tooltip("The total angle of the spread cone.")]
+    [SerializeField] private float spreadAngle = 30f;
 
     // Controls when the player can shoot again.
     private float nextFireTime;
@@ -34,44 +43,88 @@ public class PlayerShooting : MonoBehaviour
         HandleShootingInput();
     }
 
-    /// Reads player shooting input and fires if the cooldown is ready.
+    /// Reads shooting input and fires when the cooldown is ready.
     private void HandleShootingInput()
     {
         // Left mouse button held down.
         bool isShooting = Input.GetMouseButton(0);
 
-        // Only shoot if the player is pressing fire and enough time has passed.
         if (isShooting && Time.time >= nextFireTime)
         {
             Shoot();
 
-            // Calculate the next time the player is allowed to shoot.
             // Example: fireRate 5 = one shot every 0.2 seconds.
             nextFireTime = Time.time + 1f / fireRate;
         }
     }
 
-    /// Spawns a bullet at the FirePoint and sends it forward.
+    /// Chooses which shooting behavior to use based on the current weapon.
     private void Shoot()
     {
-        // Safety check: do not shoot if prefab or fire point is missing.
         if (bulletPrefab == null || firePoint == null)
         {
             Debug.LogWarning("PlayerShooting is missing Bullet Prefab or FirePoint.");
             return;
         }
 
-        // Create the bullet at the FirePoint position and rotation.
+        switch (currentWeapon)
+        {
+            case WeaponType.Standard:
+                ShootStandard();
+                break;
+
+            case WeaponType.Spread:
+                ShootSpread();
+                break;
+        }
+    }
+
+    /// Fires one bullet straight forward.
+    private void ShootStandard()
+    {
+        Vector2 shootDirection = GetForwardDirection();
+
+        FireBullet(shootDirection);
+    }
+
+    /// Fires multiple bullets in a cone pattern.
+    private void ShootSpread()
+    {
+        // If spread bullet count is 1 or less, behave like standard shot.
+        if (spreadBulletCount <= 1)
+        {
+            ShootStandard();
+            return;
+        }
+
+        // Get the middle forward direction.
+        Vector2 forwardDirection = GetForwardDirection();
+
+        // Start angle is negative half of the spread cone.
+        float startAngle = -spreadAngle / 2f;
+
+        // Space bullets evenly across the spread cone.
+        float angleStep = spreadAngle / (spreadBulletCount - 1);
+
+        for (int i = 0; i < spreadBulletCount; i++)
+        {
+            float currentAngle = startAngle + angleStep * i;
+
+            Vector2 bulletDirection = RotateVector(forwardDirection, currentAngle);
+
+            FireBullet(bulletDirection);
+        }
+    }
+
+    /// Creates one bullet and sends it in the given direction.
+    private void FireBullet(Vector2 shootDirection)
+    {
         GameObject newBullet = Instantiate(
             bulletPrefab,
             firePoint.position,
             firePoint.rotation
         );
 
-      
-        Vector2 shootDirection = firePoint.up;
-
-        // Give the bullet its movement direction.
         Bullet bulletScript = newBullet.GetComponent<Bullet>();
 
         if (bulletScript != null)
@@ -79,6 +132,47 @@ public class PlayerShooting : MonoBehaviour
             bulletScript.SetDirection(shootDirection);
             bulletScript.AddDamageBonus(bulletDamageBonus);
         }
+    }
+
+    /// Returns the direction the FirePoint is facing.
+    /// 
+    /// Use firePoint.up if the green Y axis points out of the triangle tip.
+    /// Use firePoint.right if the red X axis points out of the triangle tip.
+    private Vector2 GetForwardDirection()
+    {
+        return firePoint.up;
+    }
+
+    /// Rotates a Vector2 by a number of degrees.
+    /// Used to create spread shot angles.
+    private Vector2 RotateVector(Vector2 vector, float degrees)
+    {
+        Quaternion rotation = Quaternion.Euler(0f, 0f, degrees);
+
+        return rotation * vector;
+    }
+
+    /// Changes the player's current weapon.
+    /// Called when the player collects a weapon pickup.
+    public void SetWeapon(WeaponType newWeapon)
+    {
+        currentWeapon = newWeapon;
+
+        Debug.Log("Weapon changed to: " + currentWeapon);
+    }
+
+    /// Returns the player's current weapon.
+    /// Used by UI and weapon pickup logic.
+    public WeaponType GetCurrentWeapon()
+    {
+        return currentWeapon;
+    }
+
+    /// Returns the current weapon name as text.
+    /// Used by the UI.
+    public string GetCurrentWeaponName()
+    {
+        return currentWeapon.ToString();
     }
 
     /// Increases the player's fire rate.
@@ -111,28 +205,5 @@ public class PlayerShooting : MonoBehaviour
     public int GetCurrentBulletDamage()
     {
         return 1 + bulletDamageBonus;
-    }
-
-    /// Changes the player's current weapon.
-    /// Called when the player collects a weapon pickup.
-    public void SetWeapon(WeaponType newWeapon)
-    {
-        currentWeapon = newWeapon;
-
-        Debug.Log("Weapon changed to: " + currentWeapon);
-    }
-
-    /// Returns the player's current weapon.
-    /// Used by UI and weapon pickup logic.
-    public WeaponType GetCurrentWeapon()
-    {
-        return currentWeapon;
-    }
-
-    /// Returns the current weapon name as text.
-    /// Used by the UI.
-    public string GetCurrentWeaponName()
-    {
-        return currentWeapon.ToString();
     }
 }
