@@ -278,6 +278,11 @@ public class UIManager : MonoBehaviour
 
         gameEnded = true;
 
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlayGameOverSFX();
+        }
+
         if (gameOverPanel != null)
         {
             gameOverPanel.SetActive(true);
@@ -301,6 +306,11 @@ public class UIManager : MonoBehaviour
         }
 
         gameEnded = true;
+
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlayVictorySFX();
+        }
 
         if (victoryPanel != null)
         {
@@ -401,5 +411,15 @@ public class UIManager : MonoBehaviour
             // Quit the actual built game.
             Application.Quit();
         #endif
+    }
+
+    /// Plays the UI button click sound.
+    /// Assign this to buttons before their main action if desired.
+    public void PlayButtonClick()
+    {
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlayButtonClickSFX();
+        }
     }
 }

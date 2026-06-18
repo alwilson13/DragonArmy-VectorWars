@@ -24,6 +24,11 @@ public class XPOrb : MonoBehaviour
                 playerExperience.AddXP(xpValue);
             }
 
+            if (AudioManager.Instance != null)
+            {
+                AudioManager.Instance.PlayXPPickupSFX();
+            }
+
             // Destroy the orb after collection.
             Destroy(gameObject);
         }

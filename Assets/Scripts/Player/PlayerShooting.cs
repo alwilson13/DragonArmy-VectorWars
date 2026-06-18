@@ -132,6 +132,12 @@ public class PlayerShooting : MonoBehaviour
             bulletScript.SetDirection(shootDirection);
             bulletScript.AddDamageBonus(bulletDamageBonus);
         }
+
+        // Play shooting sound.
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlayShootSFX();
+        }
     }
 
     /// Returns the direction the FirePoint is facing.

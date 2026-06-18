@@ -141,12 +141,17 @@ public class EnemyHealth : MonoBehaviour
         }
     }
 
-    /// Spawns the enemy explosion effect.
+    /// Spawns the enemy explosion effect and plays explosion sound.
     private void SpawnExplosion()
     {
         if (explosionPrefab != null)
         {
             Instantiate(explosionPrefab, transform.position, Quaternion.identity);
+        }
+
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlayEnemyExplosionSFX();
         }
     }
 }

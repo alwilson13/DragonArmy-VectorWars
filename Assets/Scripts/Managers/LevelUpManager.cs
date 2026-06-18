@@ -122,6 +122,11 @@ public class LevelUpManager : MonoBehaviour
         {
             levelUpPanel.SetActive(true);
         }
+
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlayLevelUpSFX();
+        }
     }
 
     /// Creates three unique upgrade choices.

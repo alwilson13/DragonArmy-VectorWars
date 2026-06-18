@@ -41,6 +41,11 @@ public class PlayerHealth : MonoBehaviour
         // Subtract damage from health.
         currentHealth -= damageAmount;
 
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlayPlayerHitSFX();
+        }
+
         Debug.Log("Player took " + damageAmount + " damage. Health left: " + currentHealth);
 
         // Check if the player should die.
