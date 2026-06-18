@@ -5620,14 +5620,17 @@ MonoBehaviour:
   - waveName: Final Challenge
     enemyGroups:
     - enemyPrefab: {fileID: 8846257112448239548, guid: cc1a5695a57515a43932f4b6ad1fcd56, type: 3}
-      enemyCount: 6
+      enemyCount: 4
       spawnDelay: 0.35
     - enemyPrefab: {fileID: 8846257112448239548, guid: 9cb189d13706ce040884d9d06243c1b8, type: 3}
-      enemyCount: 3
+      enemyCount: 2
       spawnDelay: 0.7
     - enemyPrefab: {fileID: 8846257112448239548, guid: 65383563fb6402e46bef12452dadfc62, type: 3}
-      enemyCount: 3
+      enemyCount: 2
       spawnDelay: 0.7
+    - enemyPrefab: {fileID: 8846257112448239548, guid: 2ddb4ff79ef7073488f1a9abbe4d9d21, type: 3}
+      enemyCount: 1
+      spawnDelay: 1
   firstWaveDelay: 1
   delayBetweenWaves: 2
   enemySpawner: {fileID: 2055623508}
