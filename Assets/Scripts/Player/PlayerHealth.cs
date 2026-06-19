@@ -46,6 +46,11 @@ public class PlayerHealth : MonoBehaviour
             AudioManager.Instance.PlayPlayerHitSFX();
         }
 
+        if (CameraShake.Instance != null)
+        {
+            CameraShake.Instance.Shake(0.12f, 0.12f);
+        }
+
         Debug.Log("Player took " + damageAmount + " damage. Health left: " + currentHealth);
 
         // Check if the player should die.

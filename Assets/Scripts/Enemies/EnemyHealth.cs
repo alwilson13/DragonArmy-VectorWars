@@ -153,5 +153,10 @@ public class EnemyHealth : MonoBehaviour
         {
             AudioManager.Instance.PlayEnemyExplosionSFX();
         }
+
+        if (CameraShake.Instance != null)
+        {
+            CameraShake.Instance.Shake(0.08f, 0.08f);
+        }
     }
 }
