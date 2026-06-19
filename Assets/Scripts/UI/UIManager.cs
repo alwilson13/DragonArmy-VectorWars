@@ -35,6 +35,12 @@ public class UIManager : MonoBehaviour
     [Tooltip("Text that displays the player's current weapon.")]
     [SerializeField] private TMP_Text weaponText;
 
+    [Header("Game Over Screen")]
+
+    [SerializeField] private TMP_Text finalScoreText;
+
+    [SerializeField] private TMP_Text waveReachedText;
+
     [Header("Panels")]
 
     [Tooltip("Panel shown when the player dies.")]
@@ -78,6 +84,8 @@ public class UIManager : MonoBehaviour
 
     // Tracks whether the game is still waiting at the launch screen.
     private bool isLaunchScreenOpen = true;
+
+    private static bool skipLaunchPanelOnRestart;
 
     private void Awake()
     {
@@ -139,19 +147,28 @@ public class UIManager : MonoBehaviour
             pausePanel.SetActive(false);
         }
 
-        // Show launch panel at the start.
-        if (launchPanel != null)
+        if (skipLaunchPanelOnRestart)
         {
-            launchPanel.SetActive(true);
-            isLaunchScreenOpen = true;
+            skipLaunchPanelOnRestart = false;
 
-            // Pause the game until the player clicks Start Game.
-            Time.timeScale = 0f;
+            isLaunchScreenOpen = false;
+            Time.timeScale = 1f;
+
+            if (launchPanel != null)
+            {
+                launchPanel.SetActive(false);
+            }
         }
         else
         {
-            isLaunchScreenOpen = false;
-            Time.timeScale = 1f;
+            isLaunchScreenOpen = true;
+            Time.timeScale = 0f;
+
+            if (launchPanel != null)
+            {
+                launchPanel.SetActive(true);
+                launchPanel.transform.SetAsLastSibling();
+            }
         }
 
         // Update UI immediately at the start.
@@ -266,31 +283,59 @@ public class UIManager : MonoBehaviour
         weaponText.text = "Weapon: " + playerShooting.GetCurrentWeaponName();
     }
 
-    /// Shows the Game Over panel.
-    /// Called when the player dies.
+    /// Shows the Game Over screen when the player dies.
+    /// Displays final score and wave reached.
     public void ShowGameOver()
     {
-        // If Victory or Game Over already happened, do nothing.
         if (gameEnded)
         {
             return;
         }
 
         gameEnded = true;
+        isPaused = false;
+        isLaunchScreenOpen = false;
+
+        Time.timeScale = 0f;
+
+        UpdateGameOverStats();
+
+        if (gameOverPanel != null)
+        {
+            gameOverPanel.SetActive(true);
+            gameOverPanel.transform.SetAsLastSibling();
+        }
 
         if (AudioManager.Instance != null)
         {
             AudioManager.Instance.PlayGameOverSFX();
         }
+    }
 
-        if (gameOverPanel != null)
+    /// Updates the final score and wave reached text on the Game Over screen.
+    private void UpdateGameOverStats()
+    {
+        int finalScore = 0;
+        int waveReached = 1;
+
+        if (scoreManager != null)
         {
-            gameOverPanel.SetActive(true);
+            finalScore = scoreManager.GetCurrentScore();
         }
 
-        if (victoryPanel != null)
+        if (waveManager != null)
         {
-            victoryPanel.SetActive(false);
+            waveReached = waveManager.GetCurrentWaveNumber();
+        }
+
+        if (finalScoreText != null)
+        {
+            finalScoreText.text = "Final Score: " + finalScore;
+        }
+
+        if (waveReachedText != null)
+        {
+            waveReachedText.text = "Wave Reached: " + waveReached;
         }
     }
 
@@ -323,14 +368,14 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    /// Restarts the current scene.
-    /// This is used by the restart buttons.
+    /// Restarts the run immediately without returning to the launch menu.
     public void RestartGame()
     {
-        // Reset time in case the game was paused.
+        skipLaunchPanelOnRestart = true;
+
         Time.timeScale = 1f;
 
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     /// Toggles between paused and unpaused gameplay.
@@ -421,5 +466,15 @@ public class UIManager : MonoBehaviour
         {
             AudioManager.Instance.PlayButtonClickSFX();
         }
+    }
+
+    /// Reloads the scene and returns to the launch menu.
+    public void ReturnToMenu()
+    {
+        skipLaunchPanelOnRestart = false;
+
+        Time.timeScale = 1f;
+
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }
