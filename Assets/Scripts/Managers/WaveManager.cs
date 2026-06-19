@@ -200,30 +200,19 @@ public class WaveManager : MonoBehaviour
         return waves.Length;
     }
 
-    /// Waits for the player to collect all XP orbs and finish any level-up menu
-    /// before showing the Victory screen.
+    /// Waits until remaining reward orbs are collected or gone,
+    /// then shows victory
     private IEnumerator WaitForRewardsThenVictory()
     {
-        Debug.Log("Final wave cleared. Waiting for remaining XP orbs.");
+        Debug.Log("Final wave cleared. Waiting for remaining reward orbs.");
 
-        // Wait while XP orbs still exist in the scene.
-        while (FindObjectsByType<XPOrb>(FindObjectsSortMode.None).Length > 0)
+        while (FindObjectsByType<XPOrb>(FindObjectsSortMode.None).Length > 0 ||
+               FindObjectsByType<UpgradeOrb>(FindObjectsSortMode.None).Length > 0 ||
+               FindObjectsByType<WeaponPickup>(FindObjectsSortMode.None).Length > 0)
         {
             yield return null;
         }
 
-        Debug.Log("All XP orbs collected. Checking for level-up menu.");
-
-        // Find the LevelUpManager.
-        LevelUpManager levelUpManager = FindFirstObjectByType<LevelUpManager>();
-
-        // Wait while the level-up menu is open.
-        while (levelUpManager != null && levelUpManager.IsLevelUpOpen())
-        {
-            yield return null;
-        }
-
-        // Now it is safe to show Victory.
         Victory();
     }
 }

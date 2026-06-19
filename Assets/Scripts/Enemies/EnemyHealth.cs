@@ -89,6 +89,7 @@ public class EnemyHealth : MonoBehaviour
             AwardScore();
             DropXP();
             TryDropWeaponPickup();
+            TryDropUpgradeOrb();
         }
 
         SpawnExplosion();
@@ -138,6 +139,18 @@ public class EnemyHealth : MonoBehaviour
         if (pickupDropManager != null)
         {
             pickupDropManager.TryDropWeaponPickup(transform.position);
+        }
+    }
+
+    /// Gives the UpgradeDropManager a chance to spawn an automatic upgrade orb.
+    /// This only happens when the enemy was killed by player damage.
+    private void TryDropUpgradeOrb()
+    {
+        UpgradeDropManager upgradeDropManager = FindFirstObjectByType<UpgradeDropManager>();
+
+        if (upgradeDropManager != null)
+        {
+            upgradeDropManager.TryDropUpgradeOrb(transform.position);
         }
     }
 

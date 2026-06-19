@@ -4062,6 +4062,7 @@ GameObject:
   - component: {fileID: 1418069919}
   - component: {fileID: 1418069918}
   - component: {fileID: 1418069921}
+  - component: {fileID: 1418069922}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -4187,6 +4188,18 @@ MonoBehaviour:
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
   m_Version: 2
+--- !u!114 &1418069922
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1418069917}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 837d2733a9e5d0e4da8a7a308dabbe39, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CameraShake
 --- !u!1 &1435100820
 GameObject:
   m_ObjectHideFlags: 0
@@ -5799,8 +5812,8 @@ GameObject:
   - component: {fileID: 2055623509}
   - component: {fileID: 2055623510}
   - component: {fileID: 2055623511}
-  - component: {fileID: 2055623512}
   - component: {fileID: 2055623513}
+  - component: {fileID: 2055623514}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -5938,30 +5951,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 77f54130af0e50a458fdddfa65acf112, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ScoreManager
---- !u!114 &2055623512
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2055623506}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bb004c16b9686a344a95347da4cf8d7b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::LevelUpManager
-  levelUpPanel: {fileID: 1967221785}
-  upgradeButtons:
-  - {fileID: 1169352237}
-  - {fileID: 78704977}
-  - {fileID: 707109063}
-  upgradeButtonTexts:
-  - {fileID: 1108755750}
-  - {fileID: 1334812381}
-  - {fileID: 1845828779}
-  playerMovement: {fileID: 596836335}
-  playerShooting: {fileID: 596836337}
-  playerHealth: {fileID: 596836338}
 --- !u!114 &2055623513
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5977,6 +5966,24 @@ MonoBehaviour:
   weaponPickupPrefab: {fileID: 4968633684730932204, guid: 60957f159188a0240b46c5cb32681da2, type: 3}
   weaponDropChance: 0.25
   maxWeaponDropsPerRun: 1
+--- !u!114 &2055623514
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2055623506}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fad43bc103c867f429b9e0366f4802e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UpgradeDropManager
+  fireRateOrbPrefab: {fileID: 2299977065519885157, guid: a05380c771d98e84e82f0fcef5b2b714, type: 3}
+  bulletDamageOrbPrefab: {fileID: 2299977065519885157, guid: 01061916399779d429cc3840b1d6eacd, type: 3}
+  moveSpeedOrbPrefab: {fileID: 2299977065519885157, guid: 2e79a91712b98584eb374171c83c2d99, type: 3}
+  maxHealthOrbPrefab: {fileID: 2299977065519885157, guid: 306fe2fff9b639e4a8ca1a5d4ce81886, type: 3}
+  upgradeDropChance: 1
+  maxUpgradeDropsPerRun: 6
 --- !u!1 &2058060702
 GameObject:
   m_ObjectHideFlags: 0
