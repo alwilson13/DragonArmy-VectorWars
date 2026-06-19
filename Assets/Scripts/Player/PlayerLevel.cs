@@ -1,4 +1,35 @@
 using UnityEngine;
+using static UnityEngine.UI.Image;
+
+/*PlayerLevel
+
+Source Type: Original Implementation
+
+Inspiration:
+
+Vampire Survivors
+Brotato
+Other survivor-style level progression systems
+
+Description:
+This script manages player experience gain, level progression, XP requirement calculations,and communication with the
+LevelUpManager.The progression system uses a custom scaling formula that combines linear XP growth with interval-based 
+multipliers to increase difficulty over time.
+
+Adaptations:
+
+Created a custom XP progression formula.
+Added support for multiple level gains from large XP rewards.
+Integrated with the project's upgrade selection system.
+Added XP percentage tracking for future UI implementation.
+
+Unity References:
+
+Mathf.Pow()
+Mathf.RoundToInt()
+FindFirstObjectByType<T>()
+*/
+
 
 public class PlayerLevel : MonoBehaviour
 {

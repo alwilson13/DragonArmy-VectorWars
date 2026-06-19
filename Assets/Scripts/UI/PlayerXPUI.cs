@@ -2,6 +2,28 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
+/*
+ * CameraFollow.cs
+ *
+ * Purpose:
+ * Keeps the camera centered on the player using
+ * a configurable positional offset.
+ *
+ * Inspiration:
+ * Common Unity follow-camera patterns used in
+ * top-down and arcade-style games.
+ *
+ * Unity References:
+ * GameObject.FindWithTag()
+ * Transform.position
+ * LateUpdate()
+ *
+ * Adaptations:
+ * - Automatic player lookup.
+ * - Configurable camera offset.
+ * - Designed for Vector Wars top-down gameplay.
+ */
+
 public class PlayerXPUI : MonoBehaviour
 {
     [SerializeField] private PlayerLevel playerLevel;

@@ -1,5 +1,24 @@
 using UnityEngine;
 
+/*
+ * XPPickup.cs
+ *
+ * Purpose:
+ * Awards experience points when collected by the player.
+ *
+ * Inspiration:
+ * Experience pickup systems commonly used in
+ * Vampire Survivors and survivor-like games.
+ *
+ * Unity References:
+ * https://docs.unity3d.com/ScriptReference/MonoBehaviour.OnTriggerEnter2D.html
+ *
+ * Adaptations:
+ * - Added Small, Medium, and Large XP types.
+ * - Integrated with custom PlayerLevel progression system.
+ * - Supports configurable XP rewards.
+ */
+
 public class XPPickup : MonoBehaviour
 {
     public enum XPType

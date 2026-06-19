@@ -1,5 +1,26 @@
 using UnityEngine;
 
+/*
+ * LevelUpManager.cs
+ *
+ * Purpose:
+ * Controls the level-up menu, pauses gameplay,
+ * applies player upgrades, and resumes gameplay.
+ *
+ * Inspiration:
+ * Vampire Survivors style level-up progression systems.
+ *
+ * Unity References:
+ * https://docs.unity3d.com/ScriptReference/Time-timeScale.html
+ * https://docs.unity3d.com/ScriptReference/GameObject.SetActive.html
+ *
+ * Adaptations:
+ * - Added custom movement speed upgrades.
+ * - Added health upgrades.
+ * - Added fire rate upgrades.
+ * - Integrated with Vector Wars player systems.
+ */
+
 public class LevelUpManager : MonoBehaviour
 {
     [Header("Menu References")]

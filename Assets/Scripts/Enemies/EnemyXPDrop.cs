@@ -1,5 +1,21 @@
 using UnityEngine;
 
+/*
+ * EnemyXPDrop.cs
+ *
+ * Purpose:
+ * Spawns an XP pickup when an enemy is defeated.
+ *
+ * References:
+ * Unity Scripting API - Object.Instantiate()
+ * https://docs.unity3d.com/ScriptReference/Object.Instantiate.html
+ *
+ * Adaptations:
+ * - Customized for Vector Wars progression system.
+ * - Uses project-specific XPPickup component.
+ * - Supports configurable XP values per enemy.
+ */
+
 public class EnemyXPDrop : MonoBehaviour
 {
     [Header("XP Drop")]
