@@ -41,6 +41,12 @@ public class UIManager : MonoBehaviour
 
     [SerializeField] private TMP_Text waveReachedText;
 
+    [Header("Victory Screen")]
+
+    [SerializeField] private TMP_Text victoryFinalScoreText;
+
+    [SerializeField] private TMP_Text victoryWaveReachedText;
+
     [Header("Panels")]
 
     [Tooltip("Panel shown when the player dies.")]
@@ -339,32 +345,60 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    /// Updates the final score and wave reached text on the Victory screen.
+    private void UpdateVictoryStats()
+    {
+        int finalScore = 0;
+        int waveReached = 1;
 
-    /// Shows the Victory panel.
-    /// Called when all waves are cleared.
+        if (scoreManager != null)
+        {
+            finalScore = scoreManager.GetCurrentScore();
+        }
+
+        if (waveManager != null)
+        {
+            waveReached = waveManager.GetCurrentWaveNumber();
+        }
+
+        if (victoryFinalScoreText != null)
+        {
+            victoryFinalScoreText.text = "Final Score: " + finalScore;
+        }
+
+        if (victoryWaveReachedText != null)
+        {
+            victoryWaveReachedText.text = "Wave Reached: " + waveReached;
+        }
+    }
+
+
+    /// Shows the Victory screen when the player clears all waves.
+    /// Displays final score and wave reached.
     public void ShowVictory()
     {
-        // If Victory or Game Over already happened, do nothing.
         if (gameEnded)
         {
             return;
         }
 
         gameEnded = true;
+        isPaused = false;
+        isLaunchScreenOpen = false;
 
-        if (AudioManager.Instance != null)
-        {
-            AudioManager.Instance.PlayVictorySFX();
-        }
+        Time.timeScale = 0f;
+
+        UpdateVictoryStats();
 
         if (victoryPanel != null)
         {
             victoryPanel.SetActive(true);
+            victoryPanel.transform.SetAsLastSibling();
         }
 
-        if (gameOverPanel != null)
+        if (AudioManager.Instance != null)
         {
-            gameOverPanel.SetActive(false);
+            AudioManager.Instance.PlayVictorySFX();
         }
     }
 
