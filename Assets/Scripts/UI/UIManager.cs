@@ -1,3 +1,4 @@
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -80,6 +81,9 @@ public class UIManager : MonoBehaviour
 
     [Tooltip("Reference to the PlayerShooting script.")]
     [SerializeField] private PlayerShooting playerShooting;
+
+    [Header("Level Up Message")]
+    [SerializeField] private TMP_Text levelUpMessageText;
 
 
     // Prevents Game Over and Victory from showing at the same time.
@@ -203,6 +207,30 @@ public class UIManager : MonoBehaviour
         UpdateLevelText();
         UpdateStatsText();
         UpdateWeaponText();
+    }
+
+    /// Shows a temporary level-up message without pausing gameplay.
+    public void ShowLevelUpMessage(int newLevel)
+    {
+        if (levelUpMessageText == null)
+        {
+            Debug.LogWarning("Level Up Message Text is not assigned in UIManager.");
+            return;
+        }
+
+        StopCoroutine(nameof(LevelUpMessageRoutine));
+        StartCoroutine(LevelUpMessageRoutine(newLevel));
+    }
+
+    /// Displays the level-up text for a short time.
+    private IEnumerator LevelUpMessageRoutine(int newLevel)
+    {
+        levelUpMessageText.text = "LEVEL UP!\nLevel " + newLevel;
+        levelUpMessageText.gameObject.SetActive(true);
+
+        yield return new WaitForSeconds(1.5f);
+
+        levelUpMessageText.gameObject.SetActive(false);
     }
 
     /// Updates the health text using PlayerHealth values.

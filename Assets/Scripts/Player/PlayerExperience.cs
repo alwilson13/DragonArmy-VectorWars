@@ -1,89 +1,104 @@
 using UnityEngine;
 
-/// Handles the player's experience and level values.
-/// 
-/// XP is collected from XP orbs dropped by enemies.
-/// When the player reaches enough XP, they level up and the Level-Up menu opens.
+/// Tracks player XP and level.
+/// Leveling up now happens automatically without opening a menu.
 public class PlayerExperience : MonoBehaviour
 {
     [Header("Experience Settings")]
-
-    [Tooltip("The player's current level.")]
     [SerializeField] private int currentLevel = 1;
-
-    [Tooltip("The player's current XP amount.")]
     [SerializeField] private int currentXP = 0;
-
-    [Tooltip("How much XP the player needs to reach the next level.")]
     [SerializeField] private int xpToNextLevel = 100;
-
-    [Tooltip("How much harder each level becomes. Example: 1.25 = 25% more XP required.")]
     [SerializeField] private float xpRequirementMultiplier = 1.25f;
 
-    [Header("References")]
+    [Header("Level Up Rewards")]
+    [SerializeField] private int healthReward = 1;
+    [SerializeField] private int scoreBonusPerLevel = 250;
 
-    [Tooltip("Reference to the LevelUpManager.")]
-    [SerializeField] private LevelUpManager levelUpManager;
-
-    private void Awake()
+    /// Adds XP to the player.
+    /// Called by XP orbs.
+    public void AddXP(int amount)
     {
-        // If LevelUpManager was not assigned, find it in the scene.
-        if (levelUpManager == null)
-        {
-            levelUpManager = FindFirstObjectByType<LevelUpManager>();
-        }
-    }
+        currentXP += amount;
 
-    /// Adds XP to the player and checks for level-up.
-    public void AddXP(int xpAmount)
-    {
-        if (xpAmount <= 0)
-        {
-            return;
-        }
-
-        currentXP += xpAmount;
-
-        Debug.Log("Player gained " + xpAmount + " XP. Current XP: " + currentXP);
+        Debug.Log("XP gained: " + amount + ". Current XP: " + currentXP + " / " + xpToNextLevel);
 
         CheckForLevelUp();
     }
 
-    /// Checks whether the player has enough XP to level up.
-    /// Supports XP carry-over if the player has extra XP.
+    /// Checks if the player has enough XP to level up.
     private void CheckForLevelUp()
     {
-        if (currentXP < xpToNextLevel)
+        while (currentXP >= xpToNextLevel)
         {
-            return;
-        }
+            currentXP -= xpToNextLevel;
+            currentLevel++;
 
-        currentXP -= xpToNextLevel;
-        currentLevel++;
+            xpToNextLevel = Mathf.RoundToInt(xpToNextLevel * xpRequirementMultiplier);
 
-        xpToNextLevel = Mathf.RoundToInt(xpToNextLevel * xpRequirementMultiplier);
+            Debug.Log("LEVEL UP! New level: " + currentLevel);
 
-        Debug.Log("Player leveled up to level " + currentLevel);
-
-        if (levelUpManager != null)
-        {
-            levelUpManager.OpenLevelUpMenu();
+            ApplyLevelUpRewards();
         }
     }
 
-    /// Returns the player's current level.
+    /// Gives automatic rewards whenever the player levels up.
+    private void ApplyLevelUpRewards()
+    {
+        // Play sound.
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlayLevelUpSFX();
+        }
+
+        // Heal player.
+        PlayerHealth playerHealth = GetComponent<PlayerHealth>();
+
+        if (playerHealth != null)
+        {
+            playerHealth.Heal(healthReward);
+        }
+        else
+        {
+            Debug.LogWarning("PlayerExperience could not find PlayerHealth on the player.");
+        }
+
+        // Add score bonus.
+        ScoreManager scoreManager = FindFirstObjectByType<ScoreManager>();
+
+        if (scoreManager != null)
+        {
+            int scoreBonus = currentLevel * scoreBonusPerLevel;
+            scoreManager.AddScore(scoreBonus);
+            Debug.Log("Level up score bonus added: " + scoreBonus);
+        }
+        else
+        {
+            Debug.LogWarning("PlayerExperience could not find ScoreManager.");
+        }
+
+        // Show UI message.
+        UIManager uiManager = FindFirstObjectByType<UIManager>();
+
+        if (uiManager != null)
+        {
+            uiManager.ShowLevelUpMessage(currentLevel);
+        }
+        else
+        {
+            Debug.LogWarning("PlayerExperience could not find UIManager.");
+        }
+    }
+
     public int GetCurrentLevel()
     {
         return currentLevel;
     }
 
-    /// Returns the player's current XP.
     public int GetCurrentXP()
     {
         return currentXP;
     }
 
-    /// Returns the XP required for the next level.
     public int GetXPToNextLevel()
     {
         return xpToNextLevel;

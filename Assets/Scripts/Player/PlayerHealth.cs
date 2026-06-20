@@ -160,6 +160,19 @@ public class PlayerHealth : MonoBehaviour
         }
     }
 
+    /// Heals the player without going above max health.
+    public void Heal(int amount)
+    {
+        currentHealth += amount;
+
+        if (currentHealth > maxHealth)
+        {
+            currentHealth = maxHealth;
+        }
+
+        Debug.Log("Player healed. Health: " + currentHealth + " / " + maxHealth);
+    }
+
     /// Returns the player's current health.
     /// This will be useful later for updating the UI.
     public int GetCurrentHealth()
