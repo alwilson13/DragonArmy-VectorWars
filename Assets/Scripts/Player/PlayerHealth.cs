@@ -161,9 +161,11 @@ public class PlayerHealth : MonoBehaviour
     }
 
     /// Heals the player without going above max health.
-    /// Shows HUD feedback when healing happens.
+    /// Shows HUD feedback only if health actually increased.
     public void Heal(int amount)
     {
+        int healthBeforeHeal = currentHealth;
+
         currentHealth += amount;
 
         if (currentHealth > maxHealth)
@@ -171,13 +173,19 @@ public class PlayerHealth : MonoBehaviour
             currentHealth = maxHealth;
         }
 
+        int actualHealAmount = currentHealth - healthBeforeHeal;
+
         Debug.Log("Player healed. Health: " + currentHealth + " / " + maxHealth);
 
-        UIManager uiManager = FindFirstObjectByType<UIManager>();
-
-        if (uiManager != null)
+        // Only show popup if the player actually gained health.
+        if (actualHealAmount > 0)
         {
-            uiManager.ShowHealPopup(amount);
+            UIManager uiManager = FindFirstObjectByType<UIManager>();
+
+            if (uiManager != null)
+            {
+                uiManager.ShowHealPopup(actualHealAmount);
+            }
         }
     }
 

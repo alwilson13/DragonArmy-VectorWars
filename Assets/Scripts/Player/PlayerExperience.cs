@@ -7,7 +7,7 @@ public class PlayerExperience : MonoBehaviour
     [Header("Experience Settings")]
     [SerializeField] private int currentLevel = 1;
     [SerializeField] private int currentXP = 0;
-    [SerializeField] private int xpToNextLevel = 100;
+    [SerializeField] private int xpToNextLevel = 200;
     [SerializeField] private float xpRequirementMultiplier = 1.25f;
 
     [Header("Level Up Rewards")]

@@ -1,8 +1,9 @@
 using UnityEngine;
 
-/// Allows an enemy to damage the player when touching them.
+/// Damages the player when this enemy touches them.
 /// 
-/// By default, enemies explode after hitting the player.
+/// Some enemies explode on contact.
+/// Other enemies, like PatternMover, keep moving after contact.
 public class EnemyContactDamage : MonoBehaviour
 {
     [Header("Damage Settings")]
@@ -13,46 +14,50 @@ public class EnemyContactDamage : MonoBehaviour
     [Tooltip("Should this enemy explode after hitting the player?")]
     [SerializeField] private bool explodeOnPlayerHit = true;
 
-    // Prevents the enemy from hitting the player multiple times before being destroyed.
-    private bool hasHitPlayer;
+    [Tooltip("How long before this enemy can damage the player again.")]
+    [SerializeField] private float damageCooldown = 0.75f;
 
-    /// Called by Unity when this enemy's collider touches another non-trigger collider.
+    private float nextDamageTime;
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        // Stop if this enemy already hit the player.
-        if (hasHitPlayer)
+        TryDamagePlayer(collision.gameObject);
+    }
+
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        TryDamagePlayer(collision.gameObject);
+    }
+
+    /// Damages the player if cooldown is ready.
+    private void TryDamagePlayer(GameObject otherObject)
+    {
+        if (!otherObject.CompareTag("Player"))
         {
             return;
         }
 
-        // Check if the enemy touched the player.
-        if (collision.gameObject.CompareTag("Player"))
+        if (Time.time < nextDamageTime)
         {
-            hasHitPlayer = true;
+            return;
+        }
 
-            // Try to get the PlayerHealth script from the player.
-            PlayerHealth playerHealth = collision.gameObject.GetComponent<PlayerHealth>();
+        PlayerHealth playerHealth = otherObject.GetComponent<PlayerHealth>();
 
-            // If the player has health, damage them.
-            if (playerHealth != null)
+        if (playerHealth != null)
+        {
+            playerHealth.TakeDamage(contactDamage);
+        }
+
+        nextDamageTime = Time.time + damageCooldown;
+
+        if (explodeOnPlayerHit)
+        {
+            EnemyHealth enemyHealth = GetComponent<EnemyHealth>();
+
+            if (enemyHealth != null)
             {
-                playerHealth.TakeDamage(contactDamage);
-            }
-
-            // Explode and destroy this enemy after contact.
-            if (explodeOnPlayerHit)
-            {
-                EnemyHealth enemyHealth = GetComponent<EnemyHealth>();
-
-                if (enemyHealth != null)
-                {
-                    enemyHealth.ExplodeAndDie();
-                }
-                else
-                {
-                    // Fallback in case EnemyHealth is missing.
-                    Destroy(gameObject);
-                }
+                enemyHealth.ExplodeAndDie();
             }
         }
     }

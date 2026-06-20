@@ -100,11 +100,6 @@ public class UpgradeOrb : MonoBehaviour
 
                     playerHealth.IncreaseMaxHealth(healthAmount);
 
-                    if (uiManager != null)
-                    {
-                        uiManager.ShowHealPopup(healthAmount);
-                    }
-
                     Debug.Log("Collected Max Health upgrade.");
                 }
                 break;

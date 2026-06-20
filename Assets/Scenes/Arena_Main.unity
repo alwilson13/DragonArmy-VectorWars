@@ -1572,7 +1572,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerExperience
   currentLevel: 1
   currentXP: 0
-  xpToNextLevel: 100
+  xpToNextLevel: 200
   xpRequirementMultiplier: 1.25
   healthReward: 1
   scoreBonusPerLevel: 250
@@ -7478,6 +7478,9 @@ MonoBehaviour:
     - enemyPrefab: {fileID: 8846257112448239548, guid: 65383563fb6402e46bef12452dadfc62, type: 3}
       enemyCount: 3
       spawnDelay: 0.7
+    - enemyPrefab: {fileID: 8846257112448239548, guid: 9f321d4ddc099024a82454b9ac4e934a, type: 3}
+      enemyCount: 2
+      spawnDelay: 0.8
   - waveName: Final Challenge
     enemyGroups:
     - enemyPrefab: {fileID: 8846257112448239548, guid: cc1a5695a57515a43932f4b6ad1fcd56, type: 3}
@@ -7489,6 +7492,9 @@ MonoBehaviour:
     - enemyPrefab: {fileID: 8846257112448239548, guid: 65383563fb6402e46bef12452dadfc62, type: 3}
       enemyCount: 2
       spawnDelay: 0.7
+    - enemyPrefab: {fileID: 8846257112448239548, guid: 9f321d4ddc099024a82454b9ac4e934a, type: 3}
+      enemyCount: 2
+      spawnDelay: 0.8
     - enemyPrefab: {fileID: 8846257112448239548, guid: 2ddb4ff79ef7073488f1a9abbe4d9d21, type: 3}
       enemyCount: 1
       spawnDelay: 1
@@ -7559,7 +7565,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PickupDropManager
   weaponPickupPrefab: {fileID: 4968633684730932204, guid: 60957f159188a0240b46c5cb32681da2, type: 3}
-  weaponDropChance: 0.081
+  weaponDropChance: 0.119
   maxWeaponDropsPerRun: 1
 --- !u!114 &2055623514
 MonoBehaviour:
@@ -7577,7 +7583,7 @@ MonoBehaviour:
   bulletDamageOrbPrefab: {fileID: 2299977065519885157, guid: 01061916399779d429cc3840b1d6eacd, type: 3}
   moveSpeedOrbPrefab: {fileID: 2299977065519885157, guid: 2e79a91712b98584eb374171c83c2d99, type: 3}
   maxHealthOrbPrefab: {fileID: 2299977065519885157, guid: 306fe2fff9b639e4a8ca1a5d4ce81886, type: 3}
-  upgradeDropChance: 0
+  upgradeDropChance: 0.125
   maxUpgradeDropsPerRun: 6
 --- !u!1 &2058060702
 GameObject:
