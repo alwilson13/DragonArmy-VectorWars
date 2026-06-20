@@ -45,12 +45,20 @@ public class UpgradeOrb : MonoBehaviour
         PlayerMovement playerMovement = player.GetComponent<PlayerMovement>();
         PlayerHealth playerHealth = player.GetComponent<PlayerHealth>();
 
+        UIManager uiManager = FindFirstObjectByType<UIManager>();
+
         switch (upgradeType)
         {
             case UpgradeType.FireRate:
                 if (playerShooting != null)
                 {
                     playerShooting.IncreaseFireRate(upgradeAmount);
+
+                    if (uiManager != null)
+                    {
+                        uiManager.ShowFireRatePopup(upgradeAmount);
+                    }
+
                     Debug.Log("Collected Fire Rate upgrade.");
                 }
                 break;
@@ -58,7 +66,15 @@ public class UpgradeOrb : MonoBehaviour
             case UpgradeType.BulletDamage:
                 if (playerShooting != null)
                 {
-                    playerShooting.IncreaseBulletDamage(Mathf.RoundToInt(upgradeAmount));
+                    int damageAmount = Mathf.RoundToInt(upgradeAmount);
+
+                    playerShooting.IncreaseBulletDamage(damageAmount);
+
+                    if (uiManager != null)
+                    {
+                        uiManager.ShowDamagePopup(damageAmount);
+                    }
+
                     Debug.Log("Collected Bullet Damage upgrade.");
                 }
                 break;
@@ -67,6 +83,12 @@ public class UpgradeOrb : MonoBehaviour
                 if (playerMovement != null)
                 {
                     playerMovement.IncreaseMoveSpeed(upgradeAmount);
+
+                    if (uiManager != null)
+                    {
+                        uiManager.ShowSpeedPopup(upgradeAmount);
+                    }
+
                     Debug.Log("Collected Move Speed upgrade.");
                 }
                 break;
@@ -74,7 +96,15 @@ public class UpgradeOrb : MonoBehaviour
             case UpgradeType.MaxHealth:
                 if (playerHealth != null)
                 {
-                    playerHealth.IncreaseMaxHealth(Mathf.RoundToInt(upgradeAmount));
+                    int healthAmount = Mathf.RoundToInt(upgradeAmount);
+
+                    playerHealth.IncreaseMaxHealth(healthAmount);
+
+                    if (uiManager != null)
+                    {
+                        uiManager.ShowHealPopup(healthAmount);
+                    }
+
                     Debug.Log("Collected Max Health upgrade.");
                 }
                 break;

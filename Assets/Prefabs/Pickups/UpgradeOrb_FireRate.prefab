@@ -186,4 +186,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PulseEffect
   pulseSpeed: 4
-  pulseAmount: 0.08
+  pulseAmount: 0.5

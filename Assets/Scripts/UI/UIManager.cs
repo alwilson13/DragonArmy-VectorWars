@@ -85,6 +85,13 @@ public class UIManager : MonoBehaviour
     [Header("Level Up Message")]
     [SerializeField] private TMP_Text levelUpMessageText;
 
+    [Header("Upgrade Popup Feedback")]
+    [SerializeField] private StatPopupUI statPopupPrefab;
+    [SerializeField] private RectTransform healPopupAnchor;
+    [SerializeField] private RectTransform fireRatePopupAnchor;
+    [SerializeField] private RectTransform damagePopupAnchor;
+    [SerializeField] private RectTransform speedPopupAnchor;
+
 
     // Prevents Game Over and Victory from showing at the same time.
     private bool gameEnded;
@@ -539,4 +546,53 @@ public class UIManager : MonoBehaviour
 
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
+
+    /// Shows a popup when the player receives a heal.
+    public void ShowHealPopup(int amount)
+    {
+        ShowStatPopup("+ " + amount + " Health", Color.green, healPopupAnchor);
+    }
+
+    /// Shows a popup when the player receives a fire rate upgrade.
+    public void ShowFireRatePopup(float amount)
+    {
+        ShowStatPopup("+ " + amount.ToString("0.0") + " Fire Rate", Color.yellow, fireRatePopupAnchor);
+    }
+
+    /// Shows a popup when the player receives a damage upgrade.
+    public void ShowDamagePopup(int amount)
+    {
+        ShowStatPopup("+ " + amount + " Damage", Color.red, damagePopupAnchor);
+    }
+
+    /// Shows a popup when the player receives a movement speed upgrade.
+    public void ShowSpeedPopup(float amount)
+    {
+        Color cyan = new Color(0f, 0.9f, 1f);
+
+        ShowStatPopup("+ " + amount.ToString("0.0") + " Speed", cyan, speedPopupAnchor);
+    }
+
+    /// Creates one popup at the chosen HUD anchor.
+    private void ShowStatPopup(string message, Color color, RectTransform anchor)
+    {
+        if (statPopupPrefab == null || anchor == null)
+        {
+            Debug.LogWarning("UIManager is missing StatPopup prefab or anchor.");
+            return;
+        }
+
+        StatPopupUI popup = Instantiate(statPopupPrefab, anchor);
+
+        RectTransform popupRect = popup.GetComponent<RectTransform>();
+
+        if (popupRect != null)
+        {
+            popupRect.anchoredPosition = Vector2.zero;
+            popupRect.localScale = Vector3.one;
+        }
+
+        popup.Setup(message, color);
+    }
+
 }
