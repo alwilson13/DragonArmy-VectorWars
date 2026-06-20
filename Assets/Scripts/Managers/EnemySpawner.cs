@@ -1,55 +1,137 @@
+using System.Collections;
 using UnityEngine;
 
-/// Handles spawning enemies at random spawn points.
+/// Handles enemy spawning in the arena.
 /// 
-/// The WaveManager tells this script when to spawn enemies.
+/// This spawner can show a spawn indicator before creating the enemy,
+/// giving the player time to react.
 public class EnemySpawner : MonoBehaviour
 {
     [Header("Enemy Prefabs")]
 
-    [Tooltip("The default enemy prefab that will be spawned.")]
+    [Tooltip("Default enemy prefab used by simple spawn calls.")]
     [SerializeField] private GameObject defaultEnemyPrefab;
 
     [Header("Spawn Points")]
 
-    [Tooltip("The locations where enemies can spawn.")]
+    [Tooltip("Possible locations where enemies can spawn.")]
     [SerializeField] private Transform[] spawnPoints;
 
-    /// Spawns one enemy using the default enemy prefab.
+    [Header("Spawn Indicator Settings")]
+
+    [Tooltip("Prefab used as the warning indicator before enemies spawn.")]
+    [SerializeField] private GameObject spawnIndicatorPrefab;
+
+    [Tooltip("How long the indicator stays visible before the enemy appears.")]
+    [SerializeField] private float indicatorDuration = 1f;
+
+    /// Spawns the default enemy immediately.
+    /// Useful for simple testing.
     public GameObject SpawnDefaultEnemy()
     {
         return SpawnEnemy(defaultEnemyPrefab);
     }
 
-    /// Spawns one enemy using a specific enemy prefab.
-    /// This will be useful later when waves include different enemy types.
+    /// Spawns an enemy immediately at a random spawn point.
     public GameObject SpawnEnemy(GameObject enemyPrefab)
     {
-        // Safety check: make sure an enemy prefab exists.
         if (enemyPrefab == null)
         {
-            Debug.LogWarning("EnemySpawner is missing an enemy prefab.");
+            Debug.LogWarning("EnemySpawner is missing enemy prefab.");
             return null;
         }
 
-        // Safety check: make sure at least one spawn point exists.
-        if (spawnPoints == null || spawnPoints.Length == 0)
+        Transform spawnPoint = GetRandomSpawnPoint();
+
+        if (spawnPoint == null)
         {
             Debug.LogWarning("EnemySpawner has no spawn points assigned.");
             return null;
         }
 
-        // Choose a random spawn point.
-        int randomIndex = Random.Range(0, spawnPoints.Length);
-        Transform selectedSpawnPoint = spawnPoints[randomIndex];
-
-        // Spawn the enemy at the selected spawn point.
-        GameObject newEnemy = Instantiate(
+        GameObject enemy = Instantiate(
             enemyPrefab,
-            selectedSpawnPoint.position,
-            selectedSpawnPoint.rotation
+            spawnPoint.position,
+            Quaternion.identity
         );
 
-        return newEnemy;
+        return enemy;
+    }
+
+    /// Starts a spawn with a warning indicator.
+    /// 
+    /// This is used by the WaveManager so enemies appear after
+    /// the indicator completes.
+    public Coroutine SpawnEnemyWithIndicator(GameObject enemyPrefab, System.Action<GameObject> onEnemySpawned)
+    {
+        return StartCoroutine(SpawnEnemyWithIndicatorRoutine(enemyPrefab, onEnemySpawned));
+    }
+
+    /// Shows indicator, waits, then spawns enemy.
+    private IEnumerator SpawnEnemyWithIndicatorRoutine(GameObject enemyPrefab, System.Action<GameObject> onEnemySpawned)
+    {
+        if (enemyPrefab == null)
+        {
+            Debug.LogWarning("EnemySpawner is missing enemy prefab.");
+            yield break;
+        }
+
+        Transform spawnPoint = GetRandomSpawnPoint();
+
+        if (spawnPoint == null)
+        {
+            Debug.LogWarning("EnemySpawner has no spawn points assigned.");
+            yield break;
+        }
+
+        // Create the visual indicator at the selected spawn point.
+        if (spawnIndicatorPrefab != null)
+        {
+            GameObject indicatorObject = Instantiate(
+                spawnIndicatorPrefab,
+                spawnPoint.position,
+                Quaternion.identity
+            );
+
+            SpawnIndicatorRing ringIndicator = indicatorObject.GetComponent<SpawnIndicatorRing>();
+
+            if (ringIndicator != null)
+            {
+                ringIndicator.StartIndicator(indicatorDuration);
+            }
+            else
+            {
+                Destroy(indicatorObject, indicatorDuration);
+            }
+        }
+
+        // Wait while the indicator is visible.
+        yield return new WaitForSeconds(indicatorDuration);
+
+        // Spawn the enemy after the warning finishes.
+        GameObject enemy = Instantiate(
+            enemyPrefab,
+            spawnPoint.position,
+            Quaternion.identity
+        );
+
+        // Tell the WaveManager about the spawned enemy.
+        if (onEnemySpawned != null)
+        {
+            onEnemySpawned(enemy);
+        }
+    }
+
+    /// Returns a random spawn point from the assigned list.
+    private Transform GetRandomSpawnPoint()
+    {
+        if (spawnPoints == null || spawnPoints.Length == 0)
+        {
+            return null;
+        }
+
+        int randomIndex = Random.Range(0, spawnPoints.Length);
+
+        return spawnPoints[randomIndex];
     }
 }

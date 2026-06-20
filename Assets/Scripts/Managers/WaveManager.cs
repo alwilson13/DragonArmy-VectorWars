@@ -2,12 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-/// Controls wave progression for Vector wars.
+/// Controls wave progression for Vector Wars.
 /// 
-/// This version supports mixed waves.
+/// This version supports mixed waves and enemy spawn indicators.
 /// Each wave can contain multiple enemy groups.
-/// Example:
-/// Wave 3 can spawn 5 Basic Chasers and 2 Chargers.
 public class WaveManager : MonoBehaviour
 {
     [System.Serializable]
@@ -58,6 +56,10 @@ public class WaveManager : MonoBehaviour
     // Tracks whether a wave is currently running.
     private bool waveInProgress;
 
+    // Tracks enemies that have indicators active but have not spawned yet.
+    // This prevents the wave from ending before delayed spawns appear.
+    private int pendingSpawns = 0;
+
     private void Awake()
     {
         // If EnemySpawner was not assigned, try to find it on this object.
@@ -82,6 +84,7 @@ public class WaveManager : MonoBehaviour
     }
 
     /// Starts the current wave and spawns all enemy groups inside it.
+    /// Enemies now spawn after a warning indicator completes.
     private IEnumerator StartWaveRoutine()
     {
         // If there are no more waves, the player wins.
@@ -98,6 +101,7 @@ public class WaveManager : MonoBehaviour
         Debug.Log("Starting " + currentWave.waveName);
 
         activeEnemies.Clear();
+        pendingSpawns = 0;
 
         // Loop through each enemy group in the wave.
         for (int groupIndex = 0; groupIndex < currentWave.enemyGroups.Length; groupIndex++)
@@ -107,12 +111,7 @@ public class WaveManager : MonoBehaviour
             // Spawn all enemies in this group.
             for (int enemyIndex = 0; enemyIndex < group.enemyCount; enemyIndex++)
             {
-                GameObject spawnedEnemy = enemySpawner.SpawnEnemy(group.enemyPrefab);
-
-                if (spawnedEnemy != null)
-                {
-                    activeEnemies.Add(spawnedEnemy);
-                }
+                SpawnEnemyWithWarning(group.enemyPrefab);
 
                 yield return new WaitForSeconds(group.spawnDelay);
             }
@@ -128,12 +127,57 @@ public class WaveManager : MonoBehaviour
         }
     }
 
+    /// Requests an enemy spawn with a visual warning indicator.
+    private void SpawnEnemyWithWarning(GameObject enemyPrefab)
+    {
+        if (enemySpawner == null)
+        {
+            Debug.LogWarning("WaveManager is missing EnemySpawner reference.");
+            return;
+        }
+
+        if (enemyPrefab == null)
+        {
+            Debug.LogWarning("WaveManager tried to spawn a null enemy prefab.");
+            return;
+        }
+
+        // Count this enemy as pending until it actually spawns.
+        pendingSpawns++;
+
+        enemySpawner.SpawnEnemyWithIndicator(enemyPrefab, AddSpawnedEnemyToWave);
+    }
+
+    /// Adds a newly spawned enemy to the active enemy list.
+    /// Called by EnemySpawner after the spawn indicator finishes.
+    private void AddSpawnedEnemyToWave(GameObject spawnedEnemy)
+    {
+        // One pending spawn has now completed.
+        pendingSpawns--;
+
+        if (pendingSpawns < 0)
+        {
+            pendingSpawns = 0;
+        }
+
+        if (spawnedEnemy != null)
+        {
+            activeEnemies.Add(spawnedEnemy);
+        }
+    }
+
     /// Checks if all enemies in the current wave are dead.
     /// If they are, either starts the next wave or prepares Victory after rewards.
     private void CheckWaveCompletion()
     {
         // Remove destroyed enemies from the active enemy list.
         activeEnemies.RemoveAll(enemy => enemy == null);
+
+        // If enemies are still waiting to spawn, the wave is not complete.
+        if (pendingSpawns > 0)
+        {
+            return;
+        }
 
         // If enemies are still alive, the wave is not complete.
         if (activeEnemies.Count > 0)
@@ -147,7 +191,7 @@ public class WaveManager : MonoBehaviour
 
         currentWaveIndex++;
 
-        // If this was the final wave, wait for XP orbs and level-up before Victory.
+        // If this was the final wave, wait for rewards before Victory.
         if (currentWaveIndex >= waves.Length)
         {
             StartCoroutine(WaitForRewardsThenVictory());
@@ -201,7 +245,7 @@ public class WaveManager : MonoBehaviour
     }
 
     /// Waits until remaining reward orbs are collected or gone,
-    /// then shows victory
+    /// then shows victory.
     private IEnumerator WaitForRewardsThenVictory()
     {
         Debug.Log("Final wave cleared. Waiting for remaining reward orbs.");
