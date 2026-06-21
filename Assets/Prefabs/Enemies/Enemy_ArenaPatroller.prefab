@@ -14,9 +14,9 @@ GameObject:
   - component: {fileID: 1674651660433530480}
   - component: {fileID: 2546864577881268352}
   - component: {fileID: 9072707957825278172}
-  - component: {fileID: -9062893629370162504}
+  - component: {fileID: 1349971457126141754}
   m_Layer: 0
-  m_Name: Enemy_Boss
+  m_Name: Enemy_ArenaPatroller
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -32,7 +32,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 3, y: 0, z: 0}
-  m_LocalScale: {x: 1.5, y: 1.5, z: 1}
+  m_LocalScale: {x: 0.7, y: 0.7, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -87,7 +87,7 @@ SpriteRenderer:
   m_SortingOrder: 8
   m_MaskInteraction: 0
   m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
-  m_Color: {r: 0.5450981, g: 0, b: 0.1882353, a: 1}
+  m_Color: {r: 0, g: 0.8980392, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -140,7 +140,7 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8846257112448239548}
-  m_BodyType: 0
+  m_BodyType: 1
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
@@ -171,10 +171,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f6b90c7585d53743b8f8c02c17a6245, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
-  maxHealth: 35
-  scoreValue: 1000
+  maxHealth: 5
+  scoreValue: 200
   xpOrbPrefab: {fileID: 4468346817734986113, guid: 342fbbf8ca1b0ed429911f8245a8f809, type: 3}
-  xpValue: 200
+  xpValue: 35
   explosionPrefab: {fileID: 1358521827884425754, guid: fac559bc1b1fd4042aa4751fd54e7ddf, type: 3}
 --- !u!114 &9072707957825278172
 MonoBehaviour:
@@ -188,10 +188,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8062eb6232523444a2087b1bdfb49c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyContactDamage
-  contactDamage: 2
+  contactDamage: 1
   explodeOnPlayerHit: 0
   damageCooldown: 0.75
---- !u!114 &-9062893629370162504
+--- !u!114 &1349971457126141754
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -200,20 +200,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 8846257112448239548}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 43314caedb86e184985bf9915165ce17, type: 3}
+  m_Script: {fileID: 11500000, guid: de32cd02b893bcc44a8fe5f5597f79fa, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BossBehavior
-  playerTarget: {fileID: 0}
-  moveSpeed: 1.2
-  stopDistance: 3
-  bossProjectilePrefab: {fileID: 3195129790954027150, guid: 05fb279b293c82c40875c1b098995d87, type: 3}
-  shotsPerAttack: 3
-  timeBetweenShots: 0.35
-  afterAimedShotDelay: 0.7
-  projectilesPerRing: 12
-  afterRingAttackDelay: 0.9
-  chargeRingPrefab: {fileID: 2507498669390241657, guid: 1022850eb40c53f479e18804c5d2ec72, type: 3}
-  chargeWindupTime: 0.8
-  chargeSpeed: 8
-  chargeDuration: 0.75
-  afterChargeDelay: 1
+  m_EditorClassIdentifier: Assembly-CSharp::ArenaPatrolEnemy
+  patrolPoints:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  patrolMode: 0
+  moveSpeed: 3
+  pointReachDistance: 0.15
+  rotateTowardMovement: 1
+  useArenaLimits: 1
+  minX: -8
+  maxX: 8
+  minY: -4.5
+  maxY: 4.5
