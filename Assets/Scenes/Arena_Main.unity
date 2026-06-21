@@ -7721,6 +7721,10 @@ MonoBehaviour:
   bulletDamageOrbPrefab: {fileID: 2299977065519885157, guid: 01061916399779d429cc3840b1d6eacd, type: 3}
   moveSpeedOrbPrefab: {fileID: 2299977065519885157, guid: 2e79a91712b98584eb374171c83c2d99, type: 3}
   maxHealthOrbPrefab: {fileID: 2299977065519885157, guid: 306fe2fff9b639e4a8ca1a5d4ce81886, type: 3}
+  enableFireRateOrb: 1
+  enableBulletDamageOrb: 1
+  enableMoveSpeedOrb: 1
+  enableMaxHealthOrb: 0
   upgradeDropChance: 0.125
   maxUpgradeDropsPerRun: 6
 --- !u!1 &2058060702

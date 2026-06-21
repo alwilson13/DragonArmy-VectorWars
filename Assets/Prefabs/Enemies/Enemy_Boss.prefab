@@ -14,8 +14,7 @@ GameObject:
   - component: {fileID: 1674651660433530480}
   - component: {fileID: 2546864577881268352}
   - component: {fileID: 9072707957825278172}
-  - component: {fileID: 1806278001688674008}
-  - component: {fileID: -2788371749639208109}
+  - component: {fileID: -9062893629370162504}
   m_Layer: 0
   m_Name: Enemy_Boss
   m_TagString: Enemy
@@ -88,7 +87,7 @@ SpriteRenderer:
   m_SortingOrder: 8
   m_MaskInteraction: 0
   m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
-  m_Color: {r: 0.5450981, g: 0, b: 0, a: 1}
+  m_Color: {r: 0.5450981, g: 0, b: 0.1882353, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -191,7 +190,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyContactDamage
   contactDamage: 2
   explodeOnPlayerHit: 0
---- !u!114 &1806278001688674008
+  damageCooldown: 0.75
+--- !u!114 &-9062893629370162504
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -200,25 +200,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 8846257112448239548}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3e7fc098df137034dadfd999d2f0e71e, type: 3}
+  m_Script: {fileID: 11500000, guid: 43314caedb86e184985bf9915165ce17, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BossMovement
+  m_EditorClassIdentifier: Assembly-CSharp::BossBehavior
+  playerTarget: {fileID: 0}
   moveSpeed: 1.2
   stopDistance: 3
-  playerTarget: {fileID: 0}
---- !u!114 &-2788371749639208109
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8846257112448239548}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3bd05177bc795de4699b81befdfae527, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BossAttack
   bossProjectilePrefab: {fileID: 3195129790954027150, guid: 05fb279b293c82c40875c1b098995d87, type: 3}
-  projectilesPerRing: 12
-  attackCooldown: 2.5
-  firstAttackDelay: 1.5
+  shotsPerAttack: 3
+  timeBetweenShots: 0.35
+  afterShootDelay: 0.8
+  chargeWindupTime: 0.7
+  chargeSpeed: 8
+  chargeDuration: 0.45
+  afterChargeDelay: 1
+  flashBeforeCharge: 1
+  chargeWarningColor: {r: 1, g: 0.84313726, b: 0, a: 1}
