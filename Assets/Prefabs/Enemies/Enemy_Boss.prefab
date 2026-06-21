@@ -209,10 +209,11 @@ MonoBehaviour:
   bossProjectilePrefab: {fileID: 3195129790954027150, guid: 05fb279b293c82c40875c1b098995d87, type: 3}
   shotsPerAttack: 3
   timeBetweenShots: 0.35
-  afterShootDelay: 0.8
-  chargeWindupTime: 0.7
+  afterAimedShotDelay: 0.7
+  projectilesPerRing: 12
+  afterRingAttackDelay: 0.9
+  chargeRingPrefab: {fileID: 2507498669390241657, guid: 1022850eb40c53f479e18804c5d2ec72, type: 3}
+  chargeWindupTime: 0.8
   chargeSpeed: 8
   chargeDuration: 0.45
   afterChargeDelay: 1
-  flashBeforeCharge: 1
-  chargeWarningColor: {r: 1, g: 0.84313726, b: 0, a: 1}

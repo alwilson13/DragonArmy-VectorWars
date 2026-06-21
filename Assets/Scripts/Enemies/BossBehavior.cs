@@ -3,8 +3,11 @@ using UnityEngine;
 
 /// Controls the boss behavior.
 /// 
-/// The boss alternates between moving toward the player,
-/// shooting projectiles at the player, and charging toward the player.
+/// The boss alternates between:
+/// 1. Aimed shots at the player
+/// 2. Ring bullet attack
+/// 3. Charge attack with warning ring
+/// 
 /// Contact damage is handled by EnemyContactDamage.
 public class BossBehavior : MonoBehaviour
 {
@@ -21,24 +24,37 @@ public class BossBehavior : MonoBehaviour
     [Tooltip("How close the boss tries to get before slowing down.")]
     [SerializeField] private float stopDistance = 3f;
 
-    [Header("Shooting Settings")]
+    [Header("Projectile Settings")]
 
     [Tooltip("Projectile prefab fired by the boss.")]
     [SerializeField] private GameObject bossProjectilePrefab;
 
-    [Tooltip("How many aimed shots the boss fires before charging.")]
+    [Header("Aimed Shooting Settings")]
+
+    [Tooltip("How many aimed shots the boss fires.")]
     [SerializeField] private int shotsPerAttack = 3;
 
     [Tooltip("Delay between each aimed shot.")]
     [SerializeField] private float timeBetweenShots = 0.35f;
 
-    [Tooltip("How long the boss waits after shooting.")]
-    [SerializeField] private float afterShootDelay = 0.8f;
+    [Tooltip("How long the boss waits after aimed shooting.")]
+    [SerializeField] private float afterAimedShotDelay = 0.7f;
+
+    [Header("Ring Attack Settings")]
+
+    [Tooltip("How many projectiles are fired in the ring attack.")]
+    [SerializeField] private int projectilesPerRing = 12;
+
+    [Tooltip("How long the boss waits after the ring attack.")]
+    [SerializeField] private float afterRingAttackDelay = 0.9f;
 
     [Header("Charge Settings")]
 
-    [Tooltip("How long the boss pauses before charging.")]
-    [SerializeField] private float chargeWindupTime = 0.7f;
+    [Tooltip("Prefab for the yellow warning ring before charging.")]
+    [SerializeField] private GameObject chargeRingPrefab;
+
+    [Tooltip("How long the warning ring appears before the charge.")]
+    [SerializeField] private float chargeWindupTime = 0.8f;
 
     [Tooltip("How fast the boss charges.")]
     [SerializeField] private float chargeSpeed = 8f;
@@ -49,29 +65,13 @@ public class BossBehavior : MonoBehaviour
     [Tooltip("How long the boss waits after charging.")]
     [SerializeField] private float afterChargeDelay = 1f;
 
-    [Header("Visual Feedback")]
-
-    [Tooltip("Should the boss flash before charging?")]
-    [SerializeField] private bool flashBeforeCharge = true;
-
-    [Tooltip("Boss color during charge windup.")]
-    [SerializeField] private Color chargeWarningColor = Color.white;
-
     private Rigidbody2D rb;
-    private SpriteRenderer spriteRenderer;
 
-    private Color originalColor;
     private bool isAttacking;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-        spriteRenderer = GetComponent<SpriteRenderer>();
-
-        if (spriteRenderer != null)
-        {
-            originalColor = spriteRenderer.color;
-        }
     }
 
     private void Start()
@@ -83,7 +83,7 @@ public class BossBehavior : MonoBehaviour
 
     private void FixedUpdate()
     {
-        // During attacks, the coroutine controls movement.
+        // During attack animations, the coroutine controls movement.
         if (isAttacking)
         {
             return;
@@ -136,17 +136,19 @@ public class BossBehavior : MonoBehaviour
     }
 
     /// Main boss attack cycle.
-    /// The boss shoots, waits, charges, waits, then repeats.
     private IEnumerator BossAttackCycle()
     {
-        // Small delay so the boss does not attack instantly on spawn.
         yield return new WaitForSeconds(1.5f);
 
         while (true)
         {
-            yield return StartCoroutine(ShootAttack());
+            yield return StartCoroutine(AimedShotAttack());
 
-            yield return new WaitForSeconds(afterShootDelay);
+            yield return new WaitForSeconds(afterAimedShotDelay);
+
+            RingAttack();
+
+            yield return new WaitForSeconds(afterRingAttackDelay);
 
             yield return StartCoroutine(ChargeAttack());
 
@@ -154,9 +156,8 @@ public class BossBehavior : MonoBehaviour
         }
     }
 
-
     /// Boss fires several projectiles directly at the player.
-    private IEnumerator ShootAttack()
+    private IEnumerator AimedShotAttack()
     {
         isAttacking = true;
         rb.linearVelocity = Vector2.zero;
@@ -171,7 +172,7 @@ public class BossBehavior : MonoBehaviour
         isAttacking = false;
     }
 
-    /// Spawns one projectile aimed at the player's current position.
+    /// Fires one projectile toward the player's current position.
     private void FireProjectileAtPlayer()
     {
         if (bossProjectilePrefab == null || playerTarget == null)
@@ -180,6 +181,51 @@ public class BossBehavior : MonoBehaviour
         }
 
         Vector2 shootDirection = playerTarget.position - transform.position;
+
+        FireProjectile(shootDirection);
+
+        Debug.Log("Boss fired aimed shot.");
+    }
+
+    /// Fires projectiles in a full circle around the boss.
+    private void RingAttack()
+    {
+        isAttacking = true;
+        rb.linearVelocity = Vector2.zero;
+
+        if (bossProjectilePrefab == null)
+        {
+            Debug.LogWarning("BossBehavior is missing Boss Projectile Prefab.");
+            isAttacking = false;
+            return;
+        }
+
+        float angleStep = 360f / projectilesPerRing;
+
+        for (int i = 0; i < projectilesPerRing; i++)
+        {
+            float angle = i * angleStep;
+
+            Vector2 direction = new Vector2(
+                Mathf.Cos(angle * Mathf.Deg2Rad),
+                Mathf.Sin(angle * Mathf.Deg2Rad)
+            );
+
+            FireProjectile(direction);
+        }
+
+        Debug.Log("Boss fired ring attack.");
+
+        isAttacking = false;
+    }
+
+    /// Creates one boss projectile in the given direction.
+    private void FireProjectile(Vector2 direction)
+    {
+        if (bossProjectilePrefab == null)
+        {
+            return;
+        }
 
         GameObject newProjectile = Instantiate(
             bossProjectilePrefab,
@@ -191,13 +237,11 @@ public class BossBehavior : MonoBehaviour
 
         if (projectile != null)
         {
-            projectile.SetDirection(shootDirection);
+            projectile.SetDirection(direction);
         }
-
-        Debug.Log("Boss fired aimed shot.");
     }
 
-    /// Boss locks onto the player's position, then charges in that direction.
+    /// Boss shows a yellow warning ring, then charges toward the player's position.
     private IEnumerator ChargeAttack()
     {
         isAttacking = true;
@@ -209,24 +253,14 @@ public class BossBehavior : MonoBehaviour
             yield break;
         }
 
-        // Lock direction before the charge starts.
         Vector2 chargeDirection = playerTarget.position - transform.position;
         chargeDirection = chargeDirection.normalized;
 
-        // Visual warning before charge.
-        if (flashBeforeCharge && spriteRenderer != null)
-        {
-            spriteRenderer.color = chargeWarningColor;
-        }
+        SpawnChargeWarningRing();
 
         Debug.Log("Boss is preparing to charge.");
 
         yield return new WaitForSeconds(chargeWindupTime);
-
-        if (spriteRenderer != null)
-        {
-            spriteRenderer.color = originalColor;
-        }
 
         float chargeTimer = 0f;
 
@@ -246,16 +280,37 @@ public class BossBehavior : MonoBehaviour
         isAttacking = false;
     }
 
+    /// Spawns the yellow charge warning ring around the boss.
+    private void SpawnChargeWarningRing()
+    {
+        if (chargeRingPrefab == null)
+        {
+            return;
+        }
+
+        GameObject ringObject = Instantiate(
+            chargeRingPrefab,
+            transform.position,
+            Quaternion.identity
+        );
+
+        BossChargeRing ring = ringObject.GetComponent<BossChargeRing>();
+
+        if (ring != null)
+        {
+            ring.StartRing(chargeWindupTime, transform);
+        }
+        else
+        {
+            Destroy(ringObject, chargeWindupTime);
+        }
+    }
+
     private void OnDisable()
     {
         if (rb != null)
         {
             rb.linearVelocity = Vector2.zero;
-        }
-
-        if (spriteRenderer != null)
-        {
-            spriteRenderer.color = originalColor;
         }
     }
 }
