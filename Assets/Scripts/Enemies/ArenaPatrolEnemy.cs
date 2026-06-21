@@ -3,8 +3,9 @@ using UnityEngine;
 
 /// Moves an enemy around the arena using patrol points.
 /// 
-/// This enemy travels across the arena instead of chasing the player.
-/// It auto-finds GameObjects tagged ArenaPatrolPoint, making it safe for spawned prefabs.
+/// This enemy auto-finds GameObjects tagged ArenaPatrolPoint,
+/// then moves between them using Rigidbody2D.MovePosition.
+/// This is more reliable than using linearVelocity for patrol movement.
 public class ArenaPatrolEnemy : MonoBehaviour
 {
     public enum PatrolMode
@@ -26,47 +27,52 @@ public class ArenaPatrolEnemy : MonoBehaviour
     [SerializeField] private float moveSpeed = 3f;
 
     [Tooltip("How close the enemy must get to a patrol point before choosing the next one.")]
-    [SerializeField] private float pointReachDistance = 0.15f;
+    [SerializeField] private float pointReachDistance = 0.25f;
 
     [Tooltip("Should the enemy rotate toward its movement direction?")]
     [SerializeField] private bool rotateTowardMovement = true;
 
     [Header("Arena Boundaries")]
 
-    [Tooltip("Should this enemy stay inside the arena boundaries?")]
     [SerializeField] private bool useArenaLimits = true;
-
-    [Tooltip("Minimum X position allowed.")]
     [SerializeField] private float minX = -8f;
-
-    [Tooltip("Maximum X position allowed.")]
     [SerializeField] private float maxX = 8f;
-
-    [Tooltip("Minimum Y position allowed.")]
     [SerializeField] private float minY = -4.5f;
-
-    [Tooltip("Maximum Y position allowed.")]
     [SerializeField] private float maxY = 4.5f;
 
     private Rigidbody2D rb;
-
     private int currentPointIndex = 0;
     private int direction = 1;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+
+        if (rb == null)
+        {
+            Debug.LogError(gameObject.name + " is missing Rigidbody2D.");
+        }
     }
 
     private void Start()
     {
         FindPatrolPointsIfNeeded();
 
-        ClampStartingPosition();
-
         if (patrolPoints == null || patrolPoints.Length == 0)
         {
-            Debug.LogWarning(gameObject.name + " has no patrol points assigned or found.");
+            Debug.LogError(gameObject.name + " found 0 patrol points. Make sure patrol points are tagged ArenaPatrolPoint.");
+            return;
+        }
+
+        Debug.Log(gameObject.name + " found " + patrolPoints.Length + " patrol points.");
+
+        ClampStartingPosition();
+
+        // If the enemy spawns very close to the first patrol point,
+        // immediately choose the next one so it starts moving.
+        if (Vector2.Distance(rb.position, patrolPoints[currentPointIndex].position) <= pointReachDistance)
+        {
+            ChooseNextPoint();
         }
     }
 
@@ -75,7 +81,7 @@ public class ArenaPatrolEnemy : MonoBehaviour
         MoveAlongPatrolPath();
     }
 
-    /// Finds patrol points in the scene if none were assigned in the Inspector.
+    /// Finds patrol points in the scene if none were assigned.
     private void FindPatrolPointsIfNeeded()
     {
         if (patrolPoints != null && patrolPoints.Length > 0)
@@ -92,35 +98,23 @@ public class ArenaPatrolEnemy : MonoBehaviour
             pointTransforms.Add(point.transform);
         }
 
-        // Sort points by name so the order is predictable:
+        // Sort by name to create a predictable route:
         // PatrolPoint_0, PatrolPoint_1, PatrolPoint_2, etc.
         pointTransforms.Sort((a, b) => a.name.CompareTo(b.name));
 
         patrolPoints = pointTransforms.ToArray();
     }
 
-    /// Keeps the enemy starting position inside arena bounds.
-    private void ClampStartingPosition()
+    /// Moves the enemy toward the current patrol point.
+    private void MoveAlongPatrolPath()
     {
-        if (!useArenaLimits)
+        if (rb == null)
         {
             return;
         }
 
-        Vector2 clampedPosition = transform.position;
-
-        clampedPosition.x = Mathf.Clamp(clampedPosition.x, minX, maxX);
-        clampedPosition.y = Mathf.Clamp(clampedPosition.y, minY, maxY);
-
-        transform.position = clampedPosition;
-    }
-
-    /// Moves the enemy toward the current patrol point.
-    private void MoveAlongPatrolPath()
-    {
         if (patrolPoints == null || patrolPoints.Length == 0)
         {
-            rb.linearVelocity = Vector2.zero;
             return;
         }
 
@@ -132,31 +126,37 @@ public class ArenaPatrolEnemy : MonoBehaviour
             return;
         }
 
-        Vector2 targetPosition = targetPoint.position;
         Vector2 currentPosition = rb.position;
+        Vector2 targetPosition = targetPoint.position;
 
-        Vector2 moveDirection = targetPosition - currentPosition;
-        float distanceToPoint = moveDirection.magnitude;
+        Vector2 directionToTarget = targetPosition - currentPosition;
+        float distanceToTarget = directionToTarget.magnitude;
 
-        if (distanceToPoint <= pointReachDistance)
+        if (distanceToTarget <= pointReachDistance)
         {
             ChooseNextPoint();
             return;
         }
 
-        moveDirection = moveDirection.normalized;
+        directionToTarget = directionToTarget.normalized;
 
-        rb.linearVelocity = moveDirection * moveSpeed;
+        Vector2 nextPosition = currentPosition + directionToTarget * moveSpeed * Time.fixedDeltaTime;
+
+        if (useArenaLimits)
+        {
+            nextPosition.x = Mathf.Clamp(nextPosition.x, minX, maxX);
+            nextPosition.y = Mathf.Clamp(nextPosition.y, minY, maxY);
+        }
+
+        rb.MovePosition(nextPosition);
 
         if (rotateTowardMovement)
         {
-            RotateTowardDirection(moveDirection);
+            RotateTowardDirection(directionToTarget);
         }
-
-        KeepInsideArena();
     }
 
-    /// Chooses the next patrol point based on the selected patrol mode.
+    /// Chooses the next patrol point based on patrol mode.
     private void ChooseNextPoint()
     {
         if (patrolPoints == null || patrolPoints.Length == 0)
@@ -194,12 +194,14 @@ public class ArenaPatrolEnemy : MonoBehaviour
                 currentPointIndex = Random.Range(0, patrolPoints.Length);
                 break;
         }
+
+        Debug.Log(gameObject.name + " moving to patrol point: " + currentPointIndex);
     }
 
-    /// Keeps the enemy inside the arena limits.
-    private void KeepInsideArena()
+    /// Keeps starting position inside arena bounds.
+    private void ClampStartingPosition()
     {
-        if (!useArenaLimits)
+        if (!useArenaLimits || rb == null)
         {
             return;
         }
@@ -212,7 +214,7 @@ public class ArenaPatrolEnemy : MonoBehaviour
         rb.position = clampedPosition;
     }
 
-    /// Rotates the enemy to face its movement direction.
+    /// Rotates enemy toward movement direction.
     private void RotateTowardDirection(Vector2 directionToFace)
     {
         if (directionToFace == Vector2.zero)

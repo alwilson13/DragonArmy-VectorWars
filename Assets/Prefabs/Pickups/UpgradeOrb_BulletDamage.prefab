@@ -171,7 +171,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UpgradeOrb
   upgradeType: 1
-  upgradeAmount: 1
+  upgradeAmount: 0.5
   destroyOnPickup: 1
 --- !u!114 &5271816912879319980
 MonoBehaviour:

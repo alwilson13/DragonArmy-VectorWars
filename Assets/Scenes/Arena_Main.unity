@@ -1670,7 +1670,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerExperience
   currentLevel: 1
   currentXP: 0
-  xpToNextLevel: 200
+  xpToNextLevel: 300
   xpRequirementMultiplier: 1.25
   healthReward: 1
   scoreBonusPerLevel: 250
@@ -3824,7 +3824,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 160, y: -110}
+  m_AnchoredPosition: {x: 160, y: -120}
   m_SizeDelta: {x: 260, y: 70}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1126701939
@@ -6233,7 +6233,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1712709695
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6289,7 +6289,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 1, y: -3}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1738187114
@@ -6434,7 +6434,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: -160, y: -110}
+  m_AnchoredPosition: {x: -160, y: -120}
   m_SizeDelta: {x: 260, y: 70}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1794355133
@@ -7752,25 +7752,25 @@ MonoBehaviour:
   - waveName: warmup
     enemyGroups:
     - enemyPrefab: {fileID: 8846257112448239548, guid: cc1a5695a57515a43932f4b6ad1fcd56, type: 3}
-      enemyCount: 3
+      enemyCount: 6
       spawnDelay: 0.6
-  - waveName: More Pressure
+  - waveName: Basic Pressure
+    enemyGroups:
+    - enemyPrefab: {fileID: 8846257112448239548, guid: cc1a5695a57515a43932f4b6ad1fcd56, type: 3}
+      enemyCount: 6
+      spawnDelay: 0.5
+  - waveName: Charger Introduction
     enemyGroups:
     - enemyPrefab: {fileID: 8846257112448239548, guid: cc1a5695a57515a43932f4b6ad1fcd56, type: 3}
       enemyCount: 5
       spawnDelay: 0.5
-  - waveName: First Charger
-    enemyGroups:
-    - enemyPrefab: {fileID: 8846257112448239548, guid: cc1a5695a57515a43932f4b6ad1fcd56, type: 3}
-      enemyCount: 3
-      spawnDelay: 0.5
     - enemyPrefab: {fileID: 8846257112448239548, guid: 9cb189d13706ce040884d9d06243c1b8, type: 3}
       enemyCount: 2
       spawnDelay: 0.8
-  - waveName: First Flanker
+  - waveName: Flanker Introduction
     enemyGroups:
     - enemyPrefab: {fileID: 8846257112448239548, guid: cc1a5695a57515a43932f4b6ad1fcd56, type: 3}
-      enemyCount: 4
+      enemyCount: 5
       spawnDelay: 0.4
     - enemyPrefab: {fileID: 8846257112448239548, guid: 65383563fb6402e46bef12452dadfc62, type: 3}
       enemyCount: 3
@@ -7781,7 +7781,7 @@ MonoBehaviour:
     - enemyPrefab: {fileID: 8846257112448239548, guid: cf082acd042c69a42aed8fcfa9fbeabb, type: 3}
       enemyCount: 2
       spawnDelay: 0.8
-  - waveName: Final Challenge
+  - waveName: Pattern Enemy Introduction
     enemyGroups:
     - enemyPrefab: {fileID: 8846257112448239548, guid: cc1a5695a57515a43932f4b6ad1fcd56, type: 3}
       enemyCount: 4
@@ -7800,6 +7800,66 @@ MonoBehaviour:
       spawnDelay: 1
     - enemyPrefab: {fileID: 8846257112448239548, guid: cf082acd042c69a42aed8fcfa9fbeabb, type: 3}
       enemyCount: 2
+      spawnDelay: 1
+  - waveName: Mixed Pressure
+    enemyGroups:
+    - enemyPrefab: {fileID: 8846257112448239548, guid: cc1a5695a57515a43932f4b6ad1fcd56, type: 3}
+      enemyCount: 4
+      spawnDelay: 0.35
+    - enemyPrefab: {fileID: 8846257112448239548, guid: 9cb189d13706ce040884d9d06243c1b8, type: 3}
+      enemyCount: 2
+      spawnDelay: 0.7
+    - enemyPrefab: {fileID: 8846257112448239548, guid: 65383563fb6402e46bef12452dadfc62, type: 3}
+      enemyCount: 2
+      spawnDelay: 0.7
+    - enemyPrefab: {fileID: 8846257112448239548, guid: 9f321d4ddc099024a82454b9ac4e934a, type: 3}
+      enemyCount: 2
+      spawnDelay: 0.8
+    - enemyPrefab: {fileID: 8846257112448239548, guid: 2ddb4ff79ef7073488f1a9abbe4d9d21, type: 3}
+      enemyCount: 1
+      spawnDelay: 1
+    - enemyPrefab: {fileID: 8846257112448239548, guid: cf082acd042c69a42aed8fcfa9fbeabb, type: 3}
+      enemyCount: 2
+      spawnDelay: 1
+  - waveName: Pre-Boss Challenge
+    enemyGroups:
+    - enemyPrefab: {fileID: 8846257112448239548, guid: cc1a5695a57515a43932f4b6ad1fcd56, type: 3}
+      enemyCount: 4
+      spawnDelay: 0.35
+    - enemyPrefab: {fileID: 8846257112448239548, guid: 9cb189d13706ce040884d9d06243c1b8, type: 3}
+      enemyCount: 2
+      spawnDelay: 0.7
+    - enemyPrefab: {fileID: 8846257112448239548, guid: 65383563fb6402e46bef12452dadfc62, type: 3}
+      enemyCount: 2
+      spawnDelay: 0.7
+    - enemyPrefab: {fileID: 8846257112448239548, guid: 9f321d4ddc099024a82454b9ac4e934a, type: 3}
+      enemyCount: 2
+      spawnDelay: 0.8
+    - enemyPrefab: {fileID: 8846257112448239548, guid: 2ddb4ff79ef7073488f1a9abbe4d9d21, type: 3}
+      enemyCount: 1
+      spawnDelay: 1
+    - enemyPrefab: {fileID: 8846257112448239548, guid: cf082acd042c69a42aed8fcfa9fbeabb, type: 3}
+      enemyCount: 2
+      spawnDelay: 1
+  - waveName: Boss Wave
+    enemyGroups:
+    - enemyPrefab: {fileID: 8846257112448239548, guid: cc1a5695a57515a43932f4b6ad1fcd56, type: 3}
+      enemyCount: 4
+      spawnDelay: 0.35
+    - enemyPrefab: {fileID: 8846257112448239548, guid: 9cb189d13706ce040884d9d06243c1b8, type: 3}
+      enemyCount: 2
+      spawnDelay: 0.7
+    - enemyPrefab: {fileID: 8846257112448239548, guid: 65383563fb6402e46bef12452dadfc62, type: 3}
+      enemyCount: 2
+      spawnDelay: 0.7
+    - enemyPrefab: {fileID: 8846257112448239548, guid: 9f321d4ddc099024a82454b9ac4e934a, type: 3}
+      enemyCount: 4
+      spawnDelay: 0.8
+    - enemyPrefab: {fileID: 8846257112448239548, guid: 2ddb4ff79ef7073488f1a9abbe4d9d21, type: 3}
+      enemyCount: 2
+      spawnDelay: 1
+    - enemyPrefab: {fileID: 8846257112448239548, guid: cf082acd042c69a42aed8fcfa9fbeabb, type: 3}
+      enemyCount: 4
       spawnDelay: 1
   firstWaveDelay: 1
   delayBetweenWaves: 2

@@ -203,14 +203,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de32cd02b893bcc44a8fe5f5597f79fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ArenaPatrolEnemy
-  patrolPoints:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  patrolPoints: []
   patrolMode: 0
   moveSpeed: 3
-  pointReachDistance: 0.15
+  pointReachDistance: 0.25
   rotateTowardMovement: 1
   useArenaLimits: 1
   minX: -8
