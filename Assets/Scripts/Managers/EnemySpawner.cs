@@ -1,10 +1,11 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
 /// Handles enemy spawning in the arena.
 /// 
-/// This spawner can show a spawn indicator before creating the enemy,
-/// giving the player time to react.
+/// This spawner supports normal spawn points and special pattern enemy spawn points.
+/// Pattern enemies spawn away from the arena edges so their movement pattern stays inside the arena.
 public class EnemySpawner : MonoBehaviour
 {
     [Header("Enemy Prefabs")]
@@ -12,10 +13,15 @@ public class EnemySpawner : MonoBehaviour
     [Tooltip("Default enemy prefab used by simple spawn calls.")]
     [SerializeField] private GameObject defaultEnemyPrefab;
 
-    [Header("Spawn Points")]
+    [Header("Normal Spawn Points")]
 
-    [Tooltip("Possible locations where enemies can spawn.")]
+    [Tooltip("Possible locations where normal enemies can spawn.")]
     [SerializeField] private Transform[] spawnPoints;
+
+    [Header("Pattern Enemy Spawn Points")]
+
+    [Tooltip("Safer spawn points used by pattern movement enemies.")]
+    [SerializeField] private Transform[] patternSpawnPoints;
 
     [Header("Spawn Indicator Settings")]
 
@@ -26,13 +32,15 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] private float indicatorDuration = 1f;
 
     /// Spawns the default enemy immediately.
-    /// Useful for simple testing.
+    /// Useful for quick testing.
     public GameObject SpawnDefaultEnemy()
     {
         return SpawnEnemy(defaultEnemyPrefab);
     }
 
-    /// Spawns an enemy immediately at a random spawn point.
+    /// Spawns an enemy immediately at the correct type of spawn point.
+    /// Normal enemies use normal spawn points.
+    /// Pattern enemies use pattern spawn points.
     public GameObject SpawnEnemy(GameObject enemyPrefab)
     {
         if (enemyPrefab == null)
@@ -41,11 +49,11 @@ public class EnemySpawner : MonoBehaviour
             return null;
         }
 
-        Transform spawnPoint = GetRandomSpawnPoint();
+        Transform spawnPoint = GetSpawnPointForEnemy(enemyPrefab);
 
         if (spawnPoint == null)
         {
-            Debug.LogWarning("EnemySpawner has no spawn points assigned.");
+            Debug.LogWarning("EnemySpawner has no valid spawn points assigned.");
             return null;
         }
 
@@ -60,15 +68,15 @@ public class EnemySpawner : MonoBehaviour
 
     /// Starts a spawn with a warning indicator.
     /// 
-    /// This is used by the WaveManager so enemies appear after
-    /// the indicator completes.
-    public Coroutine SpawnEnemyWithIndicator(GameObject enemyPrefab, System.Action<GameObject> onEnemySpawned)
+    /// The enemy appears only after the indicator duration finishes.
+    /// The WaveManager receives the spawned enemy through the callback.
+    public Coroutine SpawnEnemyWithIndicator(GameObject enemyPrefab, Action<GameObject> onEnemySpawned)
     {
         return StartCoroutine(SpawnEnemyWithIndicatorRoutine(enemyPrefab, onEnemySpawned));
     }
 
-    /// Shows indicator, waits, then spawns enemy.
-    private IEnumerator SpawnEnemyWithIndicatorRoutine(GameObject enemyPrefab, System.Action<GameObject> onEnemySpawned)
+    /// Shows an indicator, waits, then spawns the enemy.
+    private IEnumerator SpawnEnemyWithIndicatorRoutine(GameObject enemyPrefab, Action<GameObject> onEnemySpawned)
     {
         if (enemyPrefab == null)
         {
@@ -76,15 +84,15 @@ public class EnemySpawner : MonoBehaviour
             yield break;
         }
 
-        Transform spawnPoint = GetRandomSpawnPoint();
+        Transform spawnPoint = GetSpawnPointForEnemy(enemyPrefab);
 
         if (spawnPoint == null)
         {
-            Debug.LogWarning("EnemySpawner has no spawn points assigned.");
+            Debug.LogWarning("EnemySpawner has no valid spawn points assigned.");
             yield break;
         }
 
-        // Create the visual indicator at the selected spawn point.
+        // Create the visual warning indicator.
         if (spawnIndicatorPrefab != null)
         {
             GameObject indicatorObject = Instantiate(
@@ -93,11 +101,19 @@ public class EnemySpawner : MonoBehaviour
                 Quaternion.identity
             );
 
+            // Supports the new ring indicator.
             SpawnIndicatorRing ringIndicator = indicatorObject.GetComponent<SpawnIndicatorRing>();
+
+            // Supports the older solid circle indicator if you still have it.
+            SpawnIndicator solidIndicator = indicatorObject.GetComponent<SpawnIndicator>();
 
             if (ringIndicator != null)
             {
                 ringIndicator.StartIndicator(indicatorDuration);
+            }
+            else if (solidIndicator != null)
+            {
+                solidIndicator.StartIndicator(indicatorDuration);
             }
             else
             {
@@ -108,30 +124,55 @@ public class EnemySpawner : MonoBehaviour
         // Wait while the indicator is visible.
         yield return new WaitForSeconds(indicatorDuration);
 
-        // Spawn the enemy after the warning finishes.
+        // Spawn the enemy after the warning indicator finishes.
         GameObject enemy = Instantiate(
             enemyPrefab,
             spawnPoint.position,
             Quaternion.identity
         );
 
-        // Tell the WaveManager about the spawned enemy.
         if (onEnemySpawned != null)
         {
             onEnemySpawned(enemy);
         }
     }
 
-    /// Returns a random spawn point from the assigned list.
-    private Transform GetRandomSpawnPoint()
+    /// Chooses the correct spawn point list based on enemy type.
+    /// PatternMover enemies use pattern spawn points.
+    /// Other enemies use normal spawn points.
+    private Transform GetSpawnPointForEnemy(GameObject enemyPrefab)
     {
-        if (spawnPoints == null || spawnPoints.Length == 0)
+        if (IsPatternMoverEnemy(enemyPrefab))
+        {
+            Transform patternSpawnPoint = GetRandomSpawnPoint(patternSpawnPoints);
+
+            if (patternSpawnPoint != null)
+            {
+                return patternSpawnPoint;
+            }
+
+            Debug.LogWarning("Pattern enemy has no Pattern Spawn Points assigned. Falling back to normal spawn points.");
+        }
+
+        return GetRandomSpawnPoint(spawnPoints);
+    }
+
+    /// Checks if the enemy prefab has the PatternMoverEnemy script.
+    private bool IsPatternMoverEnemy(GameObject enemyPrefab)
+    {
+        return enemyPrefab.GetComponent<PatternMoverEnemy>() != null;
+    }
+
+    /// Returns a random spawn point from a given spawn point list.
+    private Transform GetRandomSpawnPoint(Transform[] points)
+    {
+        if (points == null || points.Length == 0)
         {
             return null;
         }
 
-        int randomIndex = Random.Range(0, spawnPoints.Length);
+        int randomIndex = UnityEngine.Random.Range(0, points.Length);
 
-        return spawnPoints[randomIndex];
+        return points[randomIndex];
     }
 }

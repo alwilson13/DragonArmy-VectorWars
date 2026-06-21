@@ -203,8 +203,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63c0e84e0bd067b45ba6304d9f4cda83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PatternMoverEnemy
-  movementPattern: 0
+  movementPattern: 3
   moveSpeed: 2
-  moveDistance: 3
-  patternRadius: 2
+  moveDistance: 2.5
+  patternRadius: 1.8
   rotateTowardMovement: 1
+  useArenaLimits: 1
+  minX: -8
+  maxX: 8
+  minY: -4.5
+  maxY: 4.5
