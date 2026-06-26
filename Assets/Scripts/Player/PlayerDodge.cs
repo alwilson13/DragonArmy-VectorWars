@@ -3,9 +3,12 @@ using UnityEngine;
 
 /// Handles the player's dodge ability.
 /// 
-/// The player presses Space to quickly dash in their movement direction.
-/// During the dodge, the player becomes briefly invincible.
-/// The dodge has a cooldown to prevent constant spamming.
+/// The dodge gives the player a short burst of movement
+/// and temporary invincibility.
+/// 
+/// Important:
+/// Dodge input is ignored while the game is paused.
+/// This prevents dodge input from being stored and executed after unpausing.
 public class PlayerDodge : MonoBehaviour
 {
     [Header("Dodge Settings")]
@@ -13,13 +16,13 @@ public class PlayerDodge : MonoBehaviour
     [Tooltip("How fast the player moves during the dodge.")]
     [SerializeField] private float dodgeSpeed = 16f;
 
-    [Tooltip("How long the dodge movement lasts.")]
+    [Tooltip("How long the dodge lasts.")]
     [SerializeField] private float dodgeDuration = 0.15f;
 
     [Tooltip("How long the player must wait before dodging again.")]
     [SerializeField] private float dodgeCooldown = 1f;
 
-    [Tooltip("Should the player be invincible while dodging?")]
+    [Tooltip("Should the player be invincible during the dodge?")]
     [SerializeField] private bool invincibleDuringDodge = true;
 
     [Header("References")]
@@ -30,18 +33,17 @@ public class PlayerDodge : MonoBehaviour
     [Tooltip("Reference to the player's health script.")]
     [SerializeField] private PlayerHealth playerHealth;
 
-    // Reference to the player's Rigidbody2D.
+    // Rigidbody used to move the player during the dodge.
     private Rigidbody2D rb;
 
     // Tracks whether the player is currently dodging.
     private bool isDodging;
 
-    // Tracks whether the dodge is on cooldown.
-    private bool isOnCooldown;
+    // Tracks whether dodge is available.
+    private bool canDodge = true;
 
     private void Awake()
     {
-        // Get required components from the Player object.
         rb = GetComponent<Rigidbody2D>();
 
         if (playerMovement == null)
@@ -57,82 +59,77 @@ public class PlayerDodge : MonoBehaviour
 
     private void Update()
     {
-        // Press Space to dodge.
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            TryDodge();
-        }
-    }
-
-    /// Checks whether the player can dodge.
-    /// If yes, starts the dodge routine.
-    private void TryDodge()
-    {
-        // Do not dodge if already dodging or waiting on cooldown.
-        if (isDodging || isOnCooldown)
+        // Do not allow dodge input while the game is paused.
+        // This prevents Space from being stored and executed after unpausing.
+        if (Time.timeScale == 0f)
         {
             return;
         }
 
-        // Get the current movement direction from PlayerMovement.
-        Vector2 dodgeDirection = Vector2.zero;
-
-        if (playerMovement != null)
+        // Do not start another dodge while already dodging.
+        if (isDodging)
         {
-            dodgeDirection = playerMovement.GetMoveInput();
+            return;
         }
 
-        // If the player is not pressing movement keys,
-        // dodge in the direction the player is facing.
-        if (dodgeDirection == Vector2.zero)
+        // Start dodge only when cooldown is ready.
+        if (Input.GetKeyDown(KeyCode.Space) && canDodge)
         {
-            dodgeDirection = transform.up;
+            StartCoroutine(DodgeRoutine());
         }
-
-        StartCoroutine(DodgeRoutine(dodgeDirection.normalized));
     }
 
-    /// Performs the dodge movement, then starts the cooldown.
-    private IEnumerator DodgeRoutine(Vector2 dodgeDirection)
+    /// Performs the dodge movement and invincibility window.
+    private IEnumerator DodgeRoutine()
     {
-        isDodging = true;
-        isOnCooldown = true;
+        // Extra safety check in case another script starts the coroutine while paused.
+        if (Time.timeScale == 0f)
+        {
+            yield break;
+        }
 
-        // Temporarily disable regular movement so it does not fight the dodge velocity.
+        isDodging = true;
+        canDodge = false;
+
+        Vector2 dodgeDirection = GetDodgeDirection();
+
+        // Disable normal player movement during dodge so movement scripts do not fight each other.
         if (playerMovement != null)
         {
             playerMovement.enabled = false;
         }
 
-        // Make the player invincible during the dodge.
+        // Make player invincible during dodge if enabled.
         if (invincibleDuringDodge && playerHealth != null)
         {
             playerHealth.SetInvincible(true);
         }
 
-        float timer = 0f;
-
-        while (timer < dodgeDuration)
+        // Apply dodge velocity.
+        if (rb != null)
         {
             rb.linearVelocity = dodgeDirection * dodgeSpeed;
-
-            timer += Time.deltaTime;
-            yield return null;
         }
 
-        // Stop dodge velocity.
-        rb.linearVelocity = Vector2.zero;
+        // Wait for dodge duration.
+        yield return new WaitForSeconds(dodgeDuration);
 
-        // Turn invincibility off after the dodge ends.
-        if (invincibleDuringDodge && playerHealth != null)
+        // Stop dodge movement.
+        if (rb != null)
         {
-            playerHealth.SetInvincible(false);
+            rb.linearVelocity = Vector2.zero;
         }
 
-        // Re-enable regular movement.
+        // Re-enable normal movement.
         if (playerMovement != null)
         {
             playerMovement.enabled = true;
+        }
+
+        // Remove dodge invincibility.
+        if (invincibleDuringDodge && playerHealth != null)
+        {
+            playerHealth.SetInvincible(false);
         }
 
         isDodging = false;
@@ -140,25 +137,68 @@ public class PlayerDodge : MonoBehaviour
         // Wait for cooldown before allowing another dodge.
         yield return new WaitForSeconds(dodgeCooldown);
 
-        isOnCooldown = false;
+        canDodge = true;
+    }
+
+    /// Gets the direction the player should dodge.
+    /// 
+    /// If the player is moving, dodge in the movement direction.
+    /// If the player is not moving, dodge forward based on player rotation.
+    private Vector2 GetDodgeDirection()
+    {
+        Vector2 dodgeDirection = Vector2.zero;
+
+        if (playerMovement != null)
+        {
+            dodgeDirection = playerMovement.GetMoveInput();
+        }
+
+        // If no movement input exists, dodge toward the direction the player is facing.
+        if (dodgeDirection == Vector2.zero)
+        {
+            dodgeDirection = transform.up;
+        }
+
+        return dodgeDirection.normalized;
     }
 
     /// Reduces the dodge cooldown.
-    /// Useful later for level-up upgrades.
+    /// Used by future upgrade systems if needed.
     public void ReduceCooldown(float amount)
     {
         dodgeCooldown -= amount;
 
-        // Prevent cooldown from becoming too low.
-        dodgeCooldown = Mathf.Max(0.2f, dodgeCooldown);
+        if (dodgeCooldown < 0.2f)
+        {
+            dodgeCooldown = 0.2f;
+        }
 
         Debug.Log("Dodge cooldown reduced to: " + dodgeCooldown);
     }
 
-    /// Returns whether dodge is currently available.
-    /// Useful later for UI.
+    /// Returns whether the player can currently dodge.
     public bool CanDodge()
     {
-        return !isDodging && !isOnCooldown;
+        return canDodge && !isDodging;
+    }
+
+    private void OnDisable()
+    {
+        if (rb != null)
+        {
+            rb.linearVelocity = Vector2.zero;
+        }
+
+        if (invincibleDuringDodge && playerHealth != null)
+        {
+            playerHealth.SetInvincible(false);
+        }
+
+        if (playerMovement != null)
+        {
+            playerMovement.enabled = true;
+        }
+
+        isDodging = false;
     }
 }
