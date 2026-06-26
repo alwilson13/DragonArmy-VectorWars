@@ -518,11 +518,11 @@ public class UIManager : MonoBehaviour
     {
         Debug.Log("Quit Game requested.");
 
-        #if UNITY_EDITOR
-            // Stop Play Mode when testing inside Unity Editor.
-            EditorApplication.isPlaying = false;
+        #if UNITY_WEBGL
+                ReturnToMenu();
+        #elif UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
         #else
-            // Quit the actual built game.
             Application.Quit();
         #endif
     }
