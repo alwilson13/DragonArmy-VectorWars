@@ -225,4 +225,11 @@ public class PlayerHealth : MonoBehaviour
     {
         isInvincible = value;
     }
+
+    /// Returns whether the player is currently invincible.
+    /// Used by enemies to avoid destroying themselves during player dodge.
+    public bool IsInvincible()
+    {
+        return isInvincible;
+    }
 }
