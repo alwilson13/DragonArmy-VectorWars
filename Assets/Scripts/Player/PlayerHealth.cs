@@ -203,6 +203,12 @@ public class PlayerHealth : MonoBehaviour
         return maxHealth;
     }
 
+    /// Returns true if the player is already at full health.
+    public bool IsFullHealth()
+    {
+        return currentHealth >= maxHealth;
+    }
+
     /// Returns whether the player is dead.
     public bool IsDead()
     {
@@ -216,7 +222,14 @@ public class PlayerHealth : MonoBehaviour
         maxHealth += amount;
         currentHealth += amount;
 
-        Debug.Log("Max health increased to: " + maxHealth);
+        Debug.Log("Max health increased. Health: " + currentHealth + " / " + maxHealth);
+
+        UIManager uiManager = FindFirstObjectByType<UIManager>();
+
+        if (uiManager != null)
+        {
+            uiManager.ShowHealPopup(amount);
+        }
     }
 
     /// Temporarily sets player invincibility from another script.

@@ -44,22 +44,27 @@ public class PlayerExperience : MonoBehaviour
     /// Gives automatic rewards whenever the player levels up.
     private void ApplyLevelUpRewards()
     {
-        // Play sound.
+        // Play level-up sound.
         if (AudioManager.Instance != null)
         {
             AudioManager.Instance.PlayLevelUpSFX();
         }
 
-        // Heal player.
         PlayerHealth playerHealth = GetComponent<PlayerHealth>();
+        PlayerMovement playerMovement = GetComponent<PlayerMovement>();
+        PlayerShooting playerShooting = GetComponent<PlayerShooting>();
 
-        if (playerHealth != null)
+        UIManager uiManager = FindFirstObjectByType<UIManager>();
+
+        // If player is damaged, heal them.
+        if (playerHealth != null && !playerHealth.IsFullHealth())
         {
             playerHealth.Heal(healthReward);
         }
         else
         {
-            Debug.LogWarning("PlayerExperience could not find PlayerHealth on the player.");
+            // If player is already full health, give a small stat upgrade instead.
+            GiveFullHealthLevelUpBonus(playerMovement, playerShooting, uiManager);
         }
 
         // Add score bonus.
@@ -69,23 +74,14 @@ public class PlayerExperience : MonoBehaviour
         {
             int scoreBonus = currentLevel * scoreBonusPerLevel;
             scoreManager.AddScore(scoreBonus);
+
             Debug.Log("Level up score bonus added: " + scoreBonus);
         }
-        else
-        {
-            Debug.LogWarning("PlayerExperience could not find ScoreManager.");
-        }
 
-        // Show UI message.
-        UIManager uiManager = FindFirstObjectByType<UIManager>();
-
+        // Show level-up popup.
         if (uiManager != null)
         {
             uiManager.ShowLevelUpMessage(currentLevel);
-        }
-        else
-        {
-            Debug.LogWarning("PlayerExperience could not find UIManager.");
         }
     }
 
@@ -102,5 +98,42 @@ public class PlayerExperience : MonoBehaviour
     public int GetXPToNextLevel()
     {
         return xpToNextLevel;
+    }
+
+    /// Gives a small bonus when the player levels up while already at full health.
+    /// Randomly upgrades either move speed or bullet damage.
+    private void GiveFullHealthLevelUpBonus(
+        PlayerMovement playerMovement,
+        PlayerShooting playerShooting,
+        UIManager uiManager)
+    {
+        int randomBonus = Random.Range(0, 2);
+
+        if (randomBonus == 0 && playerMovement != null)
+        {
+            float speedBonus = 0.25f;
+
+            playerMovement.IncreaseMoveSpeed(speedBonus);
+
+            if (uiManager != null)
+            {
+                uiManager.ShowSpeedPopup(speedBonus);
+            }
+
+            Debug.Log("Full health level-up bonus: +" + speedBonus + " Speed");
+        }
+        else if (playerShooting != null)
+        {
+            int damageBonus = 1;
+
+            playerShooting.IncreaseBulletDamage(damageBonus);
+
+            if (uiManager != null)
+            {
+                uiManager.ShowDamagePopup(damageBonus);
+            }
+
+            Debug.Log("Full health level-up bonus: +" + damageBonus + " Damage");
+        }
     }
 }
