@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 2546864577881268352}
   - component: {fileID: 9072707957825278172}
   - component: {fileID: 3699504912452187386}
+  - component: {fileID: 7926208044629551199}
   m_Layer: 0
   m_Name: Enemy_Charger
   m_TagString: Enemy
@@ -190,6 +191,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyContactDamage
   contactDamage: 1
   explodeOnPlayerHit: 1
+  damageCooldown: 0.75
 --- !u!114 &3699504912452187386
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -208,3 +210,17 @@ MonoBehaviour:
   chargeTime: 0.45
   cooldownTime: 1
   playerTarget: {fileID: 0}
+--- !u!114 &7926208044629551199
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8846257112448239548}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7780faf88e0b044e90be84c620dd0e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyDamageFlash
+  flashColor: {r: 1, g: 1, b: 1, a: 1}
+  flashDuration: 0.08

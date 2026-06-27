@@ -45,7 +45,6 @@ public class EnemyHealth : MonoBehaviour
     /// This usually happens when the enemy is hit by a bullet.
     public void TakeDamage(int damageAmount)
     {
-        // Do not take damage if already dead.
         if (isDead)
         {
             return;
@@ -53,9 +52,15 @@ public class EnemyHealth : MonoBehaviour
 
         currentHealth -= damageAmount;
 
-        Debug.Log(gameObject.name + " took " + damageAmount + " damage. Health left: " + currentHealth);
+        EnemyDamageFlash damageFlash = GetComponent<EnemyDamageFlash>();
 
-        // If health is zero or below, kill the enemy and reward the player.
+        if (damageFlash != null)
+        {
+            damageFlash.PlayFlash();
+        }
+
+        Debug.Log(gameObject.name + " took damage. Health: " + currentHealth);
+
         if (currentHealth <= 0)
         {
             Die(true);
