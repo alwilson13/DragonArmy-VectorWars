@@ -35,6 +35,8 @@ Players earn XP by defeating enemies and collecting XP orbs. Leveling up rewards
 
 The final goal is to survive all waves, defeat the boss, and finish with the highest score possible.
 
+🎮 **Play now:** [Vector Wars on Unity Play](https://play.unity.com/en/games/94ab7e1a-d371-49aa-befa-b7b87c5b8434/vector-wars)
+
 ## Controls
 
 | Action | Input |
