@@ -6616,7 +6616,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1435100821
 RectTransform:
   m_ObjectHideFlags: 0
@@ -9507,19 +9507,34 @@ MonoBehaviour:
     - enemyPrefab: {fileID: 8846257112448239548, guid: cc1a5695a57515a43932f4b6ad1fcd56, type: 3}
       enemyCount: 6
       spawnDelay: 0.6
+    - enemyPrefab: {fileID: 8846257112448239548, guid: 9cb189d13706ce040884d9d06243c1b8, type: 3}
+      enemyCount: 6
+      spawnDelay: 0.6
+    - enemyPrefab: {fileID: 8846257112448239548, guid: 65383563fb6402e46bef12452dadfc62, type: 3}
+      enemyCount: 6
+      spawnDelay: 0.6
   - waveName: Basic Pressure
     enemyGroups:
     - enemyPrefab: {fileID: 8846257112448239548, guid: cc1a5695a57515a43932f4b6ad1fcd56, type: 3}
-      enemyCount: 6
+      enemyCount: 7
+      spawnDelay: 0.5
+    - enemyPrefab: {fileID: 8846257112448239548, guid: 65383563fb6402e46bef12452dadfc62, type: 3}
+      enemyCount: 2
+      spawnDelay: 0.5
+    - enemyPrefab: {fileID: 8846257112448239548, guid: 9cb189d13706ce040884d9d06243c1b8, type: 3}
+      enemyCount: 3
       spawnDelay: 0.5
   - waveName: Charger Introduction
     enemyGroups:
     - enemyPrefab: {fileID: 8846257112448239548, guid: cc1a5695a57515a43932f4b6ad1fcd56, type: 3}
-      enemyCount: 5
+      enemyCount: 6
       spawnDelay: 0.5
     - enemyPrefab: {fileID: 8846257112448239548, guid: 9cb189d13706ce040884d9d06243c1b8, type: 3}
-      enemyCount: 2
-      spawnDelay: 0.8
+      enemyCount: 3
+      spawnDelay: 0.9
+    - enemyPrefab: {fileID: 8846257112448239548, guid: 65383563fb6402e46bef12452dadfc62, type: 3}
+      enemyCount: 3
+      spawnDelay: 0.9
   - waveName: Flanker Introduction
     enemyGroups:
     - enemyPrefab: {fileID: 8846257112448239548, guid: cc1a5695a57515a43932f4b6ad1fcd56, type: 3}
@@ -9557,13 +9572,13 @@ MonoBehaviour:
   - waveName: Mixed Pressure
     enemyGroups:
     - enemyPrefab: {fileID: 8846257112448239548, guid: cc1a5695a57515a43932f4b6ad1fcd56, type: 3}
-      enemyCount: 4
+      enemyCount: 7
       spawnDelay: 0.35
     - enemyPrefab: {fileID: 8846257112448239548, guid: 9cb189d13706ce040884d9d06243c1b8, type: 3}
       enemyCount: 2
       spawnDelay: 0.7
     - enemyPrefab: {fileID: 8846257112448239548, guid: 65383563fb6402e46bef12452dadfc62, type: 3}
-      enemyCount: 2
+      enemyCount: 4
       spawnDelay: 0.7
     - enemyPrefab: {fileID: 8846257112448239548, guid: 9f321d4ddc099024a82454b9ac4e934a, type: 3}
       enemyCount: 2
@@ -9572,35 +9587,35 @@ MonoBehaviour:
       enemyCount: 1
       spawnDelay: 1
     - enemyPrefab: {fileID: 8846257112448239548, guid: cf082acd042c69a42aed8fcfa9fbeabb, type: 3}
-      enemyCount: 2
+      enemyCount: 3
       spawnDelay: 1
   - waveName: Pre-Boss Challenge
     enemyGroups:
     - enemyPrefab: {fileID: 8846257112448239548, guid: cc1a5695a57515a43932f4b6ad1fcd56, type: 3}
-      enemyCount: 4
+      enemyCount: 8
       spawnDelay: 0.35
     - enemyPrefab: {fileID: 8846257112448239548, guid: 9cb189d13706ce040884d9d06243c1b8, type: 3}
-      enemyCount: 2
+      enemyCount: 4
       spawnDelay: 0.7
     - enemyPrefab: {fileID: 8846257112448239548, guid: 65383563fb6402e46bef12452dadfc62, type: 3}
-      enemyCount: 2
+      enemyCount: 4
       spawnDelay: 0.7
     - enemyPrefab: {fileID: 8846257112448239548, guid: 9f321d4ddc099024a82454b9ac4e934a, type: 3}
       enemyCount: 2
-      spawnDelay: 0.8
+      spawnDelay: 1
     - enemyPrefab: {fileID: 8846257112448239548, guid: 2ddb4ff79ef7073488f1a9abbe4d9d21, type: 3}
       enemyCount: 1
       spawnDelay: 1
     - enemyPrefab: {fileID: 8846257112448239548, guid: cf082acd042c69a42aed8fcfa9fbeabb, type: 3}
       enemyCount: 2
       spawnDelay: 1
-  - waveName: Boss Wave
+  - waveName: Very Difficult Pressure Wave
     enemyGroups:
     - enemyPrefab: {fileID: 8846257112448239548, guid: cc1a5695a57515a43932f4b6ad1fcd56, type: 3}
-      enemyCount: 4
+      enemyCount: 10
       spawnDelay: 0.35
     - enemyPrefab: {fileID: 8846257112448239548, guid: 9cb189d13706ce040884d9d06243c1b8, type: 3}
-      enemyCount: 2
+      enemyCount: 5
       spawnDelay: 0.7
     - enemyPrefab: {fileID: 8846257112448239548, guid: 65383563fb6402e46bef12452dadfc62, type: 3}
       enemyCount: 2
@@ -9610,6 +9625,46 @@ MonoBehaviour:
       spawnDelay: 0.8
     - enemyPrefab: {fileID: 8846257112448239548, guid: 2ddb4ff79ef7073488f1a9abbe4d9d21, type: 3}
       enemyCount: 2
+      spawnDelay: 1
+    - enemyPrefab: {fileID: 8846257112448239548, guid: cf082acd042c69a42aed8fcfa9fbeabb, type: 3}
+      enemyCount: 4
+      spawnDelay: 1
+  - waveName: Pre-Boss Nightmare
+    enemyGroups:
+    - enemyPrefab: {fileID: 8846257112448239548, guid: cc1a5695a57515a43932f4b6ad1fcd56, type: 3}
+      enemyCount: 12
+      spawnDelay: 0.35
+    - enemyPrefab: {fileID: 8846257112448239548, guid: 9cb189d13706ce040884d9d06243c1b8, type: 3}
+      enemyCount: 5
+      spawnDelay: 0.7
+    - enemyPrefab: {fileID: 8846257112448239548, guid: 65383563fb6402e46bef12452dadfc62, type: 3}
+      enemyCount: 6
+      spawnDelay: 0.7
+    - enemyPrefab: {fileID: 8846257112448239548, guid: 9f321d4ddc099024a82454b9ac4e934a, type: 3}
+      enemyCount: 4
+      spawnDelay: 0.8
+    - enemyPrefab: {fileID: 8846257112448239548, guid: 2ddb4ff79ef7073488f1a9abbe4d9d21, type: 3}
+      enemyCount: 2
+      spawnDelay: 1
+    - enemyPrefab: {fileID: 8846257112448239548, guid: cf082acd042c69a42aed8fcfa9fbeabb, type: 3}
+      enemyCount: 4
+      spawnDelay: 1
+  - waveName: Final Boss Wave
+    enemyGroups:
+    - enemyPrefab: {fileID: 8846257112448239548, guid: cc1a5695a57515a43932f4b6ad1fcd56, type: 3}
+      enemyCount: 8
+      spawnDelay: 0.35
+    - enemyPrefab: {fileID: 8846257112448239548, guid: 9cb189d13706ce040884d9d06243c1b8, type: 3}
+      enemyCount: 4
+      spawnDelay: 0.7
+    - enemyPrefab: {fileID: 8846257112448239548, guid: 65383563fb6402e46bef12452dadfc62, type: 3}
+      enemyCount: 4
+      spawnDelay: 0.7
+    - enemyPrefab: {fileID: 8846257112448239548, guid: 9f321d4ddc099024a82454b9ac4e934a, type: 3}
+      enemyCount: 4
+      spawnDelay: 0.8
+    - enemyPrefab: {fileID: 8846257112448239548, guid: 2ddb4ff79ef7073488f1a9abbe4d9d21, type: 3}
+      enemyCount: 4
       spawnDelay: 1
     - enemyPrefab: {fileID: 8846257112448239548, guid: cf082acd042c69a42aed8fcfa9fbeabb, type: 3}
       enemyCount: 4
