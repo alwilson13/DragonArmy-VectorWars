@@ -21,6 +21,7 @@ public class AudioManager : MonoBehaviour
     [Header("Sound Effects")]
 
     [SerializeField] private AudioClip shootSFX;
+    [SerializeField] private AudioClip spreadShotSFX;
     [SerializeField] private AudioClip enemyExplosionSFX;
     [SerializeField] private AudioClip playerHitSFX;
     [SerializeField] private AudioClip xpPickupSFX;
@@ -28,6 +29,7 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private AudioClip victorySFX;
     [SerializeField] private AudioClip gameOverSFX;
     [SerializeField] private AudioClip buttonClickSFX;
+
 
     [Header("Default Audio Settings")]
 
@@ -212,5 +214,10 @@ public class AudioManager : MonoBehaviour
     public void PlayButtonClickSFX()
     {
         PlaySFX(buttonClickSFX);
+    }
+
+    public void PlaySpreadShotSFX()
+    {
+        PlaySFX(spreadShotSFX);
     }
 }

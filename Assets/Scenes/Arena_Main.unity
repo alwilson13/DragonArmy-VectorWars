@@ -5797,6 +5797,7 @@ MonoBehaviour:
   sfxSource: {fileID: 1329144052}
   gameplayMusic: {fileID: 8300000, guid: 6ee695e48d26dca42a37b9aa9f3a7d60, type: 3}
   shootSFX: {fileID: 8300000, guid: ae9b36295f1f5a94a86e0775ba4d7e3f, type: 3}
+  spreadShotSFX: {fileID: 8300000, guid: 50483f83313d42d47ba1b8d4ebc86162, type: 3}
   enemyExplosionSFX: {fileID: 8300000, guid: 0367cd63ace77b84ab45927c76b0be92, type: 3}
   playerHitSFX: {fileID: 8300000, guid: 0cb70c1275dabfd48a9eb62f402af494, type: 3}
   xpPickupSFX: {fileID: 8300000, guid: eef1b55b22a38994db82059ca2e63d40, type: 3}

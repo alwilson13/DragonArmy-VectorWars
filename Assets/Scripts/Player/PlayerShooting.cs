@@ -61,23 +61,27 @@ public class PlayerShooting : MonoBehaviour
     /// Chooses which shooting behavior to use based on the current weapon.
     private void Shoot()
     {
-        if (bulletPrefab == null || firePoint == null)
+        if (currentWeapon == WeaponType.Standard)
         {
-            Debug.LogWarning("PlayerShooting is missing Bullet Prefab or FirePoint.");
-            return;
+            ShootStandard();
+
+            if (AudioManager.Instance != null)
+            {
+                AudioManager.Instance.PlayShootSFX();
+            }
         }
-
-        switch (currentWeapon)
+        else if (currentWeapon == WeaponType.Spread)
         {
-            case WeaponType.Standard:
-                ShootStandard();
-                break;
+            ShootSpread();
 
-            case WeaponType.Spread:
-                ShootSpread();
-                break;
+            if (AudioManager.Instance != null)
+            {
+                AudioManager.Instance.PlaySpreadShotSFX();
+            }
         }
     }
+
+
 
     /// Fires one bullet straight forward.
     private void ShootStandard()
@@ -90,29 +94,33 @@ public class PlayerShooting : MonoBehaviour
     /// Fires multiple bullets in a cone pattern.
     private void ShootSpread()
     {
-        // If spread bullet count is 1 or less, behave like standard shot.
-        if (spreadBulletCount <= 1)
-        {
-            ShootStandard();
-            return;
-        }
+        int bulletCount = 3;
+        float spreadAngle = 20f;
 
-        // Get the middle forward direction.
-        Vector2 forwardDirection = GetForwardDirection();
-
-        // Start angle is negative half of the spread cone.
         float startAngle = -spreadAngle / 2f;
+        float angleStep = spreadAngle / (bulletCount - 1);
 
-        // Space bullets evenly across the spread cone.
-        float angleStep = spreadAngle / (spreadBulletCount - 1);
-
-        for (int i = 0; i < spreadBulletCount; i++)
+        for (int i = 0; i < bulletCount; i++)
         {
             float currentAngle = startAngle + angleStep * i;
 
-            Vector2 bulletDirection = RotateVector(forwardDirection, currentAngle);
+            Quaternion bulletRotation = firePoint.rotation * Quaternion.Euler(0f, 0f, currentAngle);
 
-            FireBullet(bulletDirection);
+            GameObject bulletObject = Instantiate(
+                bulletPrefab,
+                firePoint.position,
+                bulletRotation
+            );
+
+            Bullet bullet = bulletObject.GetComponent<Bullet>();
+
+            if (bullet != null)
+            {
+                Vector2 bulletDirection = bulletRotation * Vector2.up;
+
+                bullet.SetDirection(bulletDirection);
+                bullet.AddDamageBonus(bulletDamageBonus);
+            }
         }
     }
 
